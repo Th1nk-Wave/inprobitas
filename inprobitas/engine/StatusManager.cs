@@ -1,0 +1,4 @@
+namespace inprobitas.engine.StatusManager
+{
+
+}
