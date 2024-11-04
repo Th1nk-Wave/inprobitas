@@ -2,6 +2,7 @@
 using inprobitas.engine.Graphics;
 using static inprobitas.engine.Files.Utility;
 using static inprobitas.engine.Files.Video;
+using static inprobitas.engine.Files.Image;
 using static inprobitas.game.settings.GraphicsSettings;
 using inprobitas.game.gui.menus;
 using System.ComponentModel.Design;
@@ -12,8 +13,34 @@ namespace inprobitas
     {
         static void Main(string[] args)
         {
+            UInt32[] BGimage = UnpackImage(imageDirectory + "/titleScreenBG.bitmap", 320,256);
+            Image background = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(Width, Height, 0f, 0f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(Width, Height, 0f, 0f), BGimage, new UIdim(320, 256, 0f, 0f));
+
+            int res = 15;
+            List<UInt32[]> imageData = UnpackFrames(projectDirectory + "/game/gui/resources/Image/test.txt", (res * 8), (res * 6));
+            UInt32[] image = imageData[200];
+            Image GuiImage = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(Width, Height, 0f, 0f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(Width, Height, 0f, 0f), image, new UIdim((res * 8), (res * 6), 0f, 0f));
+
+            Text optionText = new Text("continue", new Color(255, 0, 0), 39, "Comfortaa");
+            Frame GuiOption1 = new Frame(new UIdim(0, 0.5f, 0, 0.5f), new UIdim(0, 1f, 0, 0f), new UIdim(0, 0.5f, 0, 0.5f), 3);
+            GuiOption1.Append(optionText);
+
+            Background transparrentBG = new Background(new Color(255, 255, 255, 100));
+            Frame CenterFrame = new Frame(new UIdim(0, 0.5f, 0, 0.5f), new UIdim(0, 0.25f, 0, 1f), new UIdim(0, 0.5f, 0, 0.5f), 2);
+            CenterFrame.Append(transparrentBG); CenterFrame.Append(GuiOption1);
+
+            Background blackBG = new Background(new Color(0, 0, 0));
+            Frame BGFrame = new Frame(new UIdim(0, 0f, 0, 0f), new UIdim(0, 1f, 0, 1f), new UIdim(0, 0f, 0, 0f), 0);
+            BGFrame.Append(blackBG); BGFrame.Append(CenterFrame); BGFrame.Append(background);
+
+
+
+
+            GUI mainGUI = new GUI(Width, Height);
+            mainGUI.Append(BGFrame);
+
             Window w = new Window(Width,Height,PixelSize);
-            w.ProcessGUI(MainMenu.mainGUI);
+            w.ProcessGUI(mainGUI);
             w.Update_optimise2();
             w.Render_optimise();
 

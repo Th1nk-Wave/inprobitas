@@ -227,13 +227,12 @@
 
     public class Text : FrameModification
     {
-        public Color TextColor;
         public string Content;
         public string FontName;
         public TextRenderer selfRenderer;
+        public Color TextColor { get => selfRenderer.TextColor; set => selfRenderer.TextColor = value; }
         public Text(string text,Color TextColor,int TextSize,string FontName)
         {
-            this.TextColor = TextColor;
             this.Content = text;
             this.FontName = FontName;
             this.selfRenderer = new TextRenderer(FontName,TextSize,TextColor,text);
@@ -331,7 +330,7 @@
                     ushort ScaledX = (ushort)((X * ImageSize.pixelX) / scaledImageSize.pixelX);
                     ushort ScaledY = (ushort)((Y * ImageSize.pixelY) / scaledImageSize.pixelY);
 
-                    UInt32 rgb = ImageData[ScaledX + ScaledY * ImageSize.pixelX];
+                    UInt32 rgb = ImageDataScaled[ScaledX + ScaledY * ImageSize.pixelX];
                     ImageDataPerFrame[X + Y * scaledImageSize.pixelX] = rgb;
                 }
             }
@@ -385,7 +384,7 @@
                     UIdim Anchor = Child.anchor.getAbsolute(AbsoluteSize.pixelX, AbsoluteSize.pixelY);
 
                     Child.Draw(w, AbsolutePos, AbsoluteSize, Anchor);
-                    inner(Parent, AbsolutePos - Anchor, AbsoluteSize);
+                    inner(Child, AbsolutePos - Anchor, AbsoluteSize);
                 }
             }
             foreach (GuiElement Child in GetChildren())

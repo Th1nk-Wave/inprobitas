@@ -34,6 +34,16 @@ namespace inprobitas.engine.Graphics
             );
         }
 
+        public Color Blend(Color col2)
+        {
+            float alpha = (float)col2.a / (float)255;
+            return new Color(
+                (byte)(((float)col2.r * alpha) + ((float)r * (float)(1 - alpha))),
+                (byte)(((float)col2.g * alpha) + ((float)g * (float)(1 - alpha))),
+                (byte)(((float)col2.b * alpha) + ((float)b * (float)(1 - alpha)))
+            );
+        }
+
         public UInt32 ToUint32()
         {
             return ((UInt32)this.r << 8) | ((UInt32)this.g << 16) | ((UInt32)this.b << 24) | (UInt32)this.a;
@@ -116,7 +126,15 @@ namespace inprobitas.engine.Graphics
         {
             if (x < 0 || y < 0) { return; }
             if (x > _Width || y > _Height) { return; }
-            ColorBuffer[x + y*_Width] = col.ToUint32();
+
+            if (col.a < 255)
+            {
+                Color temp = Color.FromUint32(ColorBuffer[x + y * _Width]);
+                ColorBuffer[x + y * _Width] = temp.Blend(col).ToUint32();
+            } else
+            {
+                ColorBuffer[x + y * _Width] = col.ToUint32();
+            }
             LineUpdates[y] = true;
         }
         public Color GetPixel(UInt16 x, UInt16 y)
@@ -144,7 +162,11 @@ namespace inprobitas.engine.Graphics
                 {
                     UInt32 col = frame[x + y * Width];
                     byte a = (byte)col;
-                    if (a > 100)
+                    if (a < 255)
+                    {
+                        UInt32 tempCol = ColorBuffer[(x + X) + (y + Y) * _Width];
+                        ColorBuffer[(x + X) + (y + Y) * _Width] = Color.FromUint32(tempCol).Blend(Color.FromUint32(col)).ToUint32();
+                    } else
                     {
                         ColorBuffer[(x + X) + (y + Y) * _Width] = col;
                     }
@@ -165,7 +187,15 @@ namespace inprobitas.engine.Graphics
                 for (short X = (short)X1; X != X2; X+=StepX)
                 {
                     if (X > _Width || X < 0) { continue; }
-                    ColorBuffer[X + Y * _Width] = colUInt32;
+                    if (col.a < 255)
+                    {
+                        Color temp = Color.FromUint32(ColorBuffer[X + Y * _Width]);
+                        ColorBuffer[X + Y * _Width] = temp.Blend(col).ToUint32();
+                    }
+                    else
+                    {
+                        ColorBuffer[X + Y * _Width] = col.ToUint32();
+                    }
                 }
                 LineUpdates[Y] = true;
             }
