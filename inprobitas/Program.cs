@@ -2,6 +2,9 @@
 using inprobitas.engine.Graphics;
 using static inprobitas.engine.Files.Utility;
 using static inprobitas.engine.Files.Video;
+using static inprobitas.game.settings.GraphicsSettings;
+using inprobitas.game.gui.menus;
+using System.ComponentModel.Design;
 
 namespace inprobitas
 {
@@ -9,6 +12,12 @@ namespace inprobitas
     {
         static void Main(string[] args)
         {
+            Window w = new Window(Width,Height,PixelSize);
+            w.ProcessGUI(MainMenu.mainGUI);
+            w.Update_optimise2();
+            w.Render_optimise();
+
+            /*
             ushort res = 60;
             Window w = new Window((ushort)(8 * res), (ushort)(6 * res), 2);
 
@@ -54,8 +63,8 @@ namespace inprobitas
             w.Update_optimise2();
             w.Render_optimise();
             Random rnd = new Random();
-            Text randomAssStuff = new Text("eat my ass microsoft" + rnd.Next(0, 10).ToString(), new Color(255, 0, 0), 20, "Comfortaa");
-            Text randomAssStuff2 = new Text("fuck your stupid terminal" + rnd.Next(0, 10).ToString(), new Color(255, 0, 0), 30, "Comfortaa");
+            Text randomAssStuff = new Text("hello" + rnd.Next(0, 10).ToString(), new Color(255, 0, 0), 20, "Comfortaa");
+            Text randomAssStuff2 = new Text("big text haha" + rnd.Next(0, 10).ToString(), new Color(255, 0, 0), 30, "Comfortaa");
             Frame randomAssContainer = new Frame(new UIdim(50, 0f, 50, 0f), new UIdim(50, 0f, 50, 0f), new UIdim(0, 0f, 0, 0f), 1000);
             Frame randomAssContainer2 = new Frame(new UIdim(0, 0f, 100, 0f), new UIdim(50, 0f, 50, 0f), new UIdim(0, 0f, 0, 0f), 1000);
             randomAssContainer.Append(randomAssStuff);
@@ -69,17 +78,18 @@ namespace inprobitas
             while (true)
             {
                 randomAssContainer.Remove(randomAssStuff);
-                randomAssStuff = new Text("eat my ass microsoft" + rnd.Next(0, 10).ToString(), new Color(255, 0, 0), 20, "Comfortaa");
+                randomAssStuff = new Text("hello" + rnd.Next(0, 10).ToString(), new Color(255, 0, 0), 10, "Comfortaa");
                 randomAssContainer.Append(randomAssStuff);
 
                 randomAssContainer2.Remove(randomAssStuff2);
-                randomAssStuff2 = new Text("fuck your stupid terminal" + rnd.Next(0, 10).ToString(), new Color(255, 0, 0), 30, "Comfortaa");
+                randomAssStuff2 = new Text("big text haha" + rnd.Next(0, 10).ToString(), new Color(255, 0, 0), 20, "Comfortaa");
                 randomAssContainer2.Append(randomAssStuff2);
 
                 w.ProcessGUI(hud);
                 w.Update_optimise2();
                 w.Render_optimise();
             }
+            */
         }
     }
 }
