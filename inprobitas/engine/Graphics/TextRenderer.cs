@@ -11,10 +11,10 @@ namespace inprobitas.engine.Graphics
     static class FontLoader
     {
         static Dictionary<string, List<byte[]>> FontData = new Dictionary<string, List<byte[]>>();
+        static Dictionary<string, Dictionary<int, List<byte[]>>> CharacterImages = new Dictionary<string, Dictionary<int, List<byte[]>>>();
         public static List<byte[]> LoadFont(string FontName, int Size)
         {
-            List<byte[]> temp = new List<byte[]>();
-            if (!FontData.TryGetValue(FontName,out temp))
+            if (!FontData.ContainsKey(FontName))
             {
                 FontData[FontName] = new List<byte[]>();
                 for (int c = 0; c < 126; c++)
@@ -23,7 +23,17 @@ namespace inprobitas.engine.Graphics
                     FontData[FontName].Insert(c,charDat);
                 }
             }
-            return downscale(FontData[FontName],Size,Size);
+
+            if (!CharacterImages.ContainsKey(FontName))
+            {
+                CharacterImages.Add(FontName, new Dictionary<int, List<byte[]>>());
+            }
+
+            if (!CharacterImages[FontName].ContainsKey(Size)) {
+                CharacterImages[FontName][Size] = downscale(FontData[FontName], Size, Size);
+            }
+
+            return CharacterImages[FontName][Size];
         }
         private static byte[] downscale(byte[] originalImage, int targetWidth, int targetHeight)
         {
@@ -94,10 +104,11 @@ namespace inprobitas.engine.Graphics
 
         }
 
-        public void Render(Window w, int topX,int topY)
+        public void Render(Window w, int topX,int topY, int bottemX, int bottemY)
         {
             List<byte[]> FontData = FontLoader.LoadFont(FontName,FontSize);
             int xpos = 0;
+            int Ylevel = 0;
             foreach (char c in text.ToCharArray())
             {
                 UInt32[] character = new UInt32[FontSize * FontSize];
@@ -106,7 +117,10 @@ namespace inprobitas.engine.Graphics
                     float alpha = (float)FontData[(int)c][pos];
                     character[pos] = new Color(TextColor.r,TextColor.g,TextColor.b,(byte)alpha).ToUint32();
                 }
-                w.FillWithAt(character, (ushort)(xpos*FontSize/2 + topX), (ushort)topY, (ushort)(FontSize), (ushort)(FontSize));
+
+                if ((xpos * FontSize / 2 + topX) >= bottemX - FontSize) { xpos = 0; Ylevel++; }
+
+                w.FillWithAt(character, (ushort)(xpos*FontSize/2 + topX), (ushort)(topY + Ylevel*FontSize), (ushort)(FontSize), (ushort)(FontSize));
                 //w.SetPixel((ushort)(xpos * FontSize + topX), (ushort)(topY),new Color(255,0,0));
                 xpos++;
             }

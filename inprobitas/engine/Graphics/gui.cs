@@ -214,10 +214,37 @@
         }
         public override void Beffore(Window w, in GuiElement element, UIdim TopLeftCorner, UIdim BottemRightCorner)
         {
-            w.VerticalLine((ushort)(TopLeftCorner.pixelX - 1), (ushort)(TopLeftCorner.pixelY - 1), (ushort)((BottemRightCorner - TopLeftCorner).pixelY + 1), BorderColor);
-            w.VerticalLine((ushort)(BottemRightCorner.pixelX),(ushort)(TopLeftCorner.pixelY-1),(ushort)((BottemRightCorner-TopLeftCorner).pixelY+1),BorderColor);
-            w.HorizontalLine((ushort)(TopLeftCorner.pixelX - 1), (ushort)(TopLeftCorner.pixelY - 1), (ushort)((BottemRightCorner - TopLeftCorner).pixelY + 1), BorderColor);
-            w.HorizontalLine((ushort)(TopLeftCorner.pixelX - 1), (ushort)(BottemRightCorner.pixelY), (ushort)((BottemRightCorner - TopLeftCorner).pixelY + 2), BorderColor);
+            // Left border
+            w.VerticalLine(
+                (ushort)(TopLeftCorner.pixelX - 1),               // X position (left of TopLeftCorner)
+                (ushort)(TopLeftCorner.pixelY - 1),               // Start Y position
+                (ushort)((BottemRightCorner.pixelY - TopLeftCorner.pixelY) + 2), // Height of the border
+                BorderColor
+            );
+
+            // Right border
+            w.VerticalLine(
+                (ushort)(BottemRightCorner.pixelX),               // X position (right of BottemRightCorner)
+                (ushort)(TopLeftCorner.pixelY - 1),               // Start Y position
+                (ushort)((BottemRightCorner.pixelY - TopLeftCorner.pixelY) + 2), // Height of the border
+                BorderColor
+            );
+
+            // Top border
+            w.HorizontalLine(
+                (ushort)(TopLeftCorner.pixelX - 1),               // Start X position
+                (ushort)(TopLeftCorner.pixelY - 1),               // Y position (above TopLeftCorner)
+                (ushort)((BottemRightCorner.pixelX - TopLeftCorner.pixelX) + 2), // Width of the border
+                BorderColor
+            );
+
+            // Bottom border
+            w.HorizontalLine(
+                (ushort)(TopLeftCorner.pixelX - 1),               // Start X position
+                (ushort)(BottemRightCorner.pixelY),               // Y position (below BottemRightCorner)
+                (ushort)((BottemRightCorner.pixelX - TopLeftCorner.pixelX) + 2), // Width of the border
+                BorderColor
+            );
         }
         public override void After(Window w, in GuiElement element, UIdim TopLeftCorner, UIdim BottemRightCorner)
         {
@@ -227,13 +254,13 @@
 
     public class Text : FrameModification
     {
-        public string Content;
         public string FontName;
         public TextRenderer selfRenderer;
         public Color TextColor { get => selfRenderer.TextColor; set => selfRenderer.TextColor = value; }
+        public string Content { get => selfRenderer.text; set => selfRenderer.text = value; }
+        public int FontSize { get => selfRenderer.FontSize; set => selfRenderer.FontSize = value; }
         public Text(string text,Color TextColor,int TextSize,string FontName)
         {
-            this.Content = text;
             this.FontName = FontName;
             this.selfRenderer = new TextRenderer(FontName,TextSize,TextColor,text);
         }
@@ -243,7 +270,7 @@
         }
         public override void After(Window w, in GuiElement element, UIdim TopLeftCorner, UIdim BottemRightCorner)
         {
-            selfRenderer.Render(w,TopLeftCorner.pixelX,TopLeftCorner.pixelY);
+            selfRenderer.Render(w,TopLeftCorner.pixelX,TopLeftCorner.pixelY,BottemRightCorner.pixelX,BottemRightCorner.pixelY);
         }
     }
 

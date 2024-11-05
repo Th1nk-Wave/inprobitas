@@ -48,6 +48,32 @@ namespace inprobitas.engine.Graphics
         {
             return ((UInt32)this.r << 8) | ((UInt32)this.g << 16) | ((UInt32)this.b << 24) | (UInt32)this.a;
         }
+
+        public static UInt32 BlendColors(UInt32 bgColor, UInt32 fgColor)
+        {
+            // Extract components of the background color
+            byte bgR = (byte)(bgColor >> 8);
+            byte bgG = (byte)(bgColor >> 16);
+            byte bgB = (byte)(bgColor >> 24);
+            byte bgA = (byte)(bgColor); // Not really needed if we assume bgA is opaque (255)
+
+            // Extract components of the foreground color
+            byte fgR = (byte)(fgColor >> 8);
+            byte fgG = (byte)(fgColor >> 16);
+            byte fgB = (byte)(fgColor >> 24);
+            byte fgA = (byte)(fgColor);
+
+            // Calculate alpha as a fraction
+            float alpha = fgA / 255f;
+
+            // Perform alpha blending for each color channel
+            byte blendedR = (byte)((fgR * alpha) + (bgR * (1 - alpha)));
+            byte blendedG = (byte)((fgG * alpha) + (bgG * (1 - alpha)));
+            byte blendedB = (byte)((fgB * alpha) + (bgB * (1 - alpha)));
+
+            // Assemble the blended color into a single UInt32 value with bgA as the final alpha
+            return ((UInt32)blendedB << 24) | ((UInt32)blendedG << 16) | ((UInt32)blendedR << 8) | bgA;
+        }
     }
     public class Window
     {
@@ -129,8 +155,7 @@ namespace inprobitas.engine.Graphics
 
             if (col.a < 255)
             {
-                Color temp = Color.FromUint32(ColorBuffer[x + y * _Width]);
-                ColorBuffer[x + y * _Width] = temp.Blend(col).ToUint32();
+                ColorBuffer[x + y * _Width] = Color.BlendColors(ColorBuffer[x + y * _Width], col.ToUint32());
             } else
             {
                 ColorBuffer[x + y * _Width] = col.ToUint32();
@@ -164,8 +189,7 @@ namespace inprobitas.engine.Graphics
                     byte a = (byte)col;
                     if (a < 255)
                     {
-                        UInt32 tempCol = ColorBuffer[(x + X) + (y + Y) * _Width];
-                        ColorBuffer[(x + X) + (y + Y) * _Width] = Color.FromUint32(tempCol).Blend(Color.FromUint32(col)).ToUint32();
+                        ColorBuffer[(x + X) + (y + Y) * _Width] = Color.BlendColors(ColorBuffer[(x + X) + (y + Y) * _Width],col);
                     } else
                     {
                         ColorBuffer[(x + X) + (y + Y) * _Width] = col;
@@ -189,8 +213,7 @@ namespace inprobitas.engine.Graphics
                     if (X > _Width || X < 0) { continue; }
                     if (col.a < 255)
                     {
-                        Color temp = Color.FromUint32(ColorBuffer[X + Y * _Width]);
-                        ColorBuffer[X + Y * _Width] = temp.Blend(col).ToUint32();
+                        ColorBuffer[X + Y * _Width] = Color.BlendColors(ColorBuffer[X + Y * _Width],col.ToUint32());
                     }
                     else
                     {

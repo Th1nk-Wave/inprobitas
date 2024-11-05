@@ -104,8 +104,8 @@ def downscale_and_extract_rgb(input_path, output_frame_size=(64, 48), repeated_b
     print("Processing complete.")
 
 # Example usage
-input_file = 'titlescreenBG.png'  # or 'test.jpg' for an image file
-output_file = "titleScreenBG.bitmap"
+input_file = 'npc2normal.png'  # or 'test.jpg' for an image file
+output_file = "npc2noraml.bitmap"
 res = 15
-output_size = (8 * res, 6 * res)
+output_size = (200,400)
 downscale_and_extract_rgb(input_file, output_size, output_file=output_file)

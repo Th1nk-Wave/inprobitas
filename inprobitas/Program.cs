@@ -13,26 +13,61 @@ namespace inprobitas
     {
         static void Main(string[] args)
         {
+            // PRELOADED IMAGES
+
             UInt32[] BGimage = UnpackImage(imageDirectory + "/titleScreenBG.bitmap", 320,256);
             Image background = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(Width, Height, 0f, 0f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(Width, Height, 0f, 0f), BGimage, new UIdim(320, 256, 0f, 0f));
 
-            int res = 15;
-            List<UInt32[]> imageData = UnpackFrames(projectDirectory + "/game/gui/resources/Image/test.txt", (res * 8), (res * 6));
-            UInt32[] image = imageData[200];
-            Image GuiImage = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(Width, Height, 0f, 0f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(Width, Height, 0f, 0f), image, new UIdim((res * 8), (res * 6), 0f, 0f));
+            UInt32[] forestImageData = UnpackImage(imageDirectory + "/forest.bitmap", 480, 270);
+            Image forest = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(Width, Height, 0f, 0f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(Width, Height, 0f, 0f), forestImageData, new UIdim(480, 270, 0f, 0f));
 
-            Text optionText = new Text("continue", new Color(255, 0, 0), 39, "Comfortaa");
-            Frame GuiOption1 = new Frame(new UIdim(0, 0.5f, 0, 0.5f), new UIdim(0, 1f, 0, 0f), new UIdim(0, 0.5f, 0, 0.5f), 3);
-            GuiOption1.Append(optionText);
+            UInt32[] npcF1ImageData = UnpackImage(imageDirectory + "/npcF1.bitmap", 200, 400);
+            Image npcF1Image = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(100, 200, 0f, 0f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(100, 200, 0f, 0f), npcF1ImageData, new UIdim(200, 400, 0f, 0f));
+
+            UInt32[] MCImageData = UnpackImage(imageDirectory + "/MainCharacter.bitmap", 200, 400);
+            Image MCImage = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(100, 200, 0f, 0f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(100, 200, 0f, 0f), MCImageData, new UIdim(200, 400, 0f, 0f));
+
+            UInt32[] npc2CryingImageData = UnpackImage(imageDirectory + "/npc2crying.bitmap", 200, 400);
+            Image npc2CryingImage = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(100, 200, 0f, 0f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(100, 200, 0f, 0f), npc2CryingImageData, new UIdim(200, 400, 0f, 0f));
+
+            UInt32[] npc2NormalImageData = UnpackImage(imageDirectory + "/npc2normal.bitmap", 200, 400);
+            Image npc2NormalImage = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(100, 200, 0f, 0f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(100, 200, 0f, 0f), npc2NormalImageData, new UIdim(200, 400, 0f, 0f));
+
+
+
+
+
+
+
+
+
+
+            Text optionText1 = new Text("continue", new Color(29, 23, 201), 39, "Comfortaa");
+            Frame GuiOption1 = new Frame(new UIdim(0, 0.5f, 10, 0.25f), new UIdim(0, 1f, 30, 0f), new UIdim(0, 0.5f, 0, 0.5f), 3);
+            GuiOption1.Append(optionText1);
+
+            Text optionText2 = new Text("new game", new Color(29, 23, 201), 39, "Comfortaa");
+            Frame GuiOption2 = new Frame(new UIdim(0, 0.5f, 40, 0.25f), new UIdim(0, 1f, 30, 0f), new UIdim(0, 0.5f, 0, 0.5f), 3);
+            GuiOption2.Append(optionText2);
+
+            Text optionText3 = new Text("load game", new Color(29, 23, 201), 34, "Comfortaa");
+            Frame GuiOption3 = new Frame(new UIdim(0, 0.5f, 70, 0.25f), new UIdim(0, 1f, 30, 0f), new UIdim(0, 0.5f, 0, 0.5f), 3);
+            GuiOption3.Append(optionText3);
 
             Background transparrentBG = new Background(new Color(255, 255, 255, 100));
-            Frame CenterFrame = new Frame(new UIdim(0, 0.5f, 0, 0.5f), new UIdim(0, 0.25f, 0, 1f), new UIdim(0, 0.5f, 0, 0.5f), 2);
-            CenterFrame.Append(transparrentBG); CenterFrame.Append(GuiOption1);
+            Frame CenterFrame = new Frame(new UIdim(0, 0.5f, 0, 0.5f), new UIdim(30, 0.25f, 0, 1f), new UIdim(0, 0.5f, 0, 0.5f), 2);
+            CenterFrame.Append(transparrentBG);
+            CenterFrame.Append(GuiOption1); CenterFrame.Append(GuiOption2); CenterFrame.Append(GuiOption3);
 
             Background blackBG = new Background(new Color(0, 0, 0));
             Frame BGFrame = new Frame(new UIdim(0, 0f, 0, 0f), new UIdim(0, 1f, 0, 1f), new UIdim(0, 0f, 0, 0f), 0);
             BGFrame.Append(blackBG); BGFrame.Append(CenterFrame); BGFrame.Append(background);
 
+            Frame TitleBox = new Frame(new UIdim(50, 0.5f, 50+10, 0f), new UIdim(400, 0f, 50, 0f), new UIdim(0, 0.5f, 0, 0.5f), 0);
+            Text TitleText = new Text("IMPROBITAS", new Color(0, 0, 0), 60, "Comfortaa");
+            //TitleBox.Append(transparrentBG);
+            TitleBox.Append(TitleText);
+            CenterFrame.Append(TitleBox);
 
 
 
@@ -44,79 +79,591 @@ namespace inprobitas
             w.Update_optimise2();
             w.Render_optimise();
 
-            /*
-            ushort res = 60;
-            Window w = new Window((ushort)(8 * res), (ushort)(6 * res), 2);
 
-            //w.Box((ushort)(8 * res-6), (ushort)(6 * res-6), (ushort)(8 * res), (ushort)(6 * res), new Color(255, 0, 0));
-
-            Background GreenBG = new Background(new Color(0,25,0));
-            Frame ScreenCover = new Frame(new UIdim(0, 0f, 0, 0f), new UIdim(0, 1f, 0, 1f), new UIdim(0, 0f, 0, 0f),0);
-            ScreenCover.Append(GreenBG);
-
-
-            Border greenBD = new Border(new Color(0, 255, 0));
-            Background WhiteBG = new Background(new Color(255, 255, 255));
-            Frame box1 = new Frame(new UIdim(0, 0f, 0, 0f), new UIdim(5, 0f, 5, 0f), new UIdim(0, 0f, 0, 0f), 101);
-            box1.Append(WhiteBG);
-
-            Frame box2 = new Frame(new UIdim(0, 1f, 0, 1f), new UIdim(5, 0f, 5, 0f), new UIdim(0, 1f, 0, 1f), 102);
-            box2.Append(WhiteBG);
-
-            Background redBG = new Background(new Color(255, 0, 0));
-
-            Frame box = new Frame(new UIdim(0, 0.5f, 0, 0.5f), new UIdim(5, 0f, 5, 0f), new UIdim(0, 0.5f, 0, 0.5f), 100);
-            box.Append(redBG);
-            box.Append(greenBD);
-
-            GUI hud = new GUI(w.Width, w.Height);
-            hud.Append(box);
-            hud.Append(box1);
-            hud.Append(box2);
-            hud.Append(ScreenCover);
-
-            w.ProcessGUI(hud);
-            w.Update_optimise2();
-            w.Render_optimise();
-
-            res = 15;
-            List<UInt32[]> imageData = UnpackFrames(projectDirectory + "/game/gui/resources/Image/test.txt", (res * 8), (res * 6));
-            UInt32[] image = imageData[200];
-            Image GuiImage = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(50, 50, 0f, 0f), new UIdim(0, 0, 0f, 0f), 100, new UIdim((res * 8), (res * 6), 0f, 0f), image, new UIdim((res * 8), (res * 6), 0f, 0f));
-
-            hud.Append(GuiImage);
-
-            w.ProcessGUI(hud);
-            w.Update_optimise2();
-            w.Render_optimise();
-            Random rnd = new Random();
-            Text randomAssStuff = new Text("hello" + rnd.Next(0, 10).ToString(), new Color(255, 0, 0), 20, "Comfortaa");
-            Text randomAssStuff2 = new Text("big text haha" + rnd.Next(0, 10).ToString(), new Color(255, 0, 0), 30, "Comfortaa");
-            Frame randomAssContainer = new Frame(new UIdim(50, 0f, 50, 0f), new UIdim(50, 0f, 50, 0f), new UIdim(0, 0f, 0, 0f), 1000);
-            Frame randomAssContainer2 = new Frame(new UIdim(0, 0f, 100, 0f), new UIdim(50, 0f, 50, 0f), new UIdim(0, 0f, 0, 0f), 1000);
-            randomAssContainer.Append(randomAssStuff);
-            randomAssContainer2.Append(randomAssStuff2);
-            hud.Append(randomAssContainer);
-            hud.Append(randomAssContainer2);
-            w.ProcessGUI(hud);
-            w.Update_optimise2();
-            w.Render_optimise();
-            
+            Background Selected = new Background(new Color(255,255,255,200));
+            Frame[] menuOptions = [GuiOption1, GuiOption2, GuiOption3];
+            Text[] texts = [optionText1,optionText2,optionText3];
+            int currentOption = 0;
             while (true)
             {
-                randomAssContainer.Remove(randomAssStuff);
-                randomAssStuff = new Text("hello" + rnd.Next(0, 10).ToString(), new Color(255, 0, 0), 10, "Comfortaa");
-                randomAssContainer.Append(randomAssStuff);
+                ConsoleKeyInfo keypressed = Console.ReadKey(true);
+                if (keypressed.Key == ConsoleKey.DownArrow)
+                {
+                    texts[currentOption].TextColor = new Color(29, 23, 201);
+                    menuOptions[currentOption].Remove(Selected);
+                    if (currentOption < menuOptions.Length - 1)
+                    {
+                        currentOption++;
+                    } else
+                    {
+                        currentOption = 0;
+                    }
+                    menuOptions[currentOption].Append(Selected);
+                    texts[currentOption].TextColor = new Color(255, 00, 00);
+                    w.ProcessGUI(mainGUI);
+                    w.Update_optimise2();
+                    w.Render_optimise();
+                    Console.Beep(400, 30);
+                }
 
-                randomAssContainer2.Remove(randomAssStuff2);
-                randomAssStuff2 = new Text("big text haha" + rnd.Next(0, 10).ToString(), new Color(255, 0, 0), 20, "Comfortaa");
-                randomAssContainer2.Append(randomAssStuff2);
+                if (keypressed.Key == ConsoleKey.UpArrow)
+                {
+                    texts[currentOption].TextColor = new Color(29, 23, 201);
+                    menuOptions[currentOption].Remove(Selected);
+                    if (currentOption > 0)
+                    {
+                        currentOption--;
+                    }
+                    else
+                    {
+                        currentOption = menuOptions.Length - 1;
+                    }
+                    menuOptions[currentOption].Append(Selected);
+                    texts[currentOption].TextColor = new Color(255,00,00);
+                    w.ProcessGUI(mainGUI);
+                    w.Update_optimise2();
+                    w.Render_optimise();
+                    Console.Beep(600, 30);
+                }
 
-                w.ProcessGUI(hud);
-                w.Update_optimise2();
-                w.Render_optimise();
+                if (keypressed.Key == ConsoleKey.Enter)
+                {
+                    Console.Beep(1200, 30);
+                    if (currentOption == 0)
+                    {
+                        break;
+                    }
+                }
             }
-            */
+
+            GUI NPCGUI = new GUI(Width,Height);
+
+            Frame NPCBGFrame = new Frame(new UIdim(0, 0f, 0, 0f), new UIdim(0, 1f, 0, 1f), new UIdim(0, 0f, 0, 0f), 0);
+            NPCBGFrame.Append(blackBG);
+            NPCGUI.Append(NPCBGFrame);
+
+
+            Border TextBubbleBorder = new Border(new Color(255,255,255));
+            Background TextBubbleBackground = new Background(new Color(50,50,50));
+            Frame TextBubble = new Frame(new UIdim(0, 0.5f, Height-2, 0f), new UIdim(Width-4, 0f, 100, 0f), new UIdim(0, 0.5f, 0, 1f), 22);
+            TextBubble.Append(TextBubbleBorder); TextBubble.Append(TextBubbleBackground);
+
+            Frame TextBubbleNameHolder = new Frame(new UIdim(-100, 1f, Height - 120, 0f), new UIdim(180, 0f, 20, 0f), new UIdim(0, 0.5f, 0, 1f), 20);
+            Text TextBubbleName = new Text("unknown voice", new Color(100, 100, 100), 20, "Comfortaa");
+            TextBubbleNameHolder.Append(TextBubbleName);
+
+            Text TextBubbleContent = new Text("umm.. hello?", new Color(255, 255, 255), 24, "Comfortaa");
+            TextBubble.Append(TextBubbleContent);
+            NPCBGFrame.Append(TextBubble);
+            NPCBGFrame.Append(TextBubbleNameHolder);
+
+            Frame NPCimageHolder = new Frame(new UIdim(0, 0.5f, 0, 0.5f), new UIdim(100, 0f, 200, 0f), new UIdim(0, 0.5f, 0, 0.5f), 2);//new Frame(new UIdim(-100, 1f, Height - 120, 0f), new UIdim(100, 0f, 200, 0f), new UIdim(0, 0.5f, 0, 1f), 2);
+            NPCBGFrame.Append(NPCimageHolder);
+
+            rend(w,NPCGUI);
+            WaitForEnter();
+            
+            TextBubbleContent.Content = "HELLO????!!??";
+            TextBubbleContent.FontSize = 50;
+
+            rend(w,NPCGUI);
+            Console.Beep(200, 200);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "i think it's. dead";
+            TextBubbleContent.FontSize = 25;
+            TextBubbleName.Content = "unknown voice 2";
+
+            rend(w, NPCGUI);
+            Console.Beep(350, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "auhh.. where the hell am i?";
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "YOU";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(230, 350);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "AAAAAA! it spoke";
+            TextBubbleContent.TextColor = new Color(255, 0, 0);
+            TextBubbleContent.FontSize = 60;
+            TextBubbleName.Content = "unknown voice";
+            TextBubbleName.TextColor = new Color(100, 100, 100);
+
+            NPCBGFrame.Append(forest);
+
+            rend(w, NPCGUI);
+            Console.Beep(2000, 650);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "what the hell..";
+            TextBubbleContent.TextColor = new Color(255, 100, 100);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "YOU";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 650);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "what is this place?";
+            TextBubbleContent.TextColor = new Color(255, 200, 200);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "YOU";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 650);
+            WaitForEnter();
+
+            NPCimageHolder.Append(npcF1Image);
+
+            TextBubbleContent.Content = "ahemm.. hello, thing..";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w,NPCGUI);
+            Console.Beep(600, 100);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "you don't look like you're from around here..";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(600, 100);
+            WaitForEnter();
+
+            NPCimageHolder.Remove(npcF1Image);
+            NPCimageHolder.Append(MCImage);
+
+            TextBubbleContent.Content = "i dont think i even belong here.";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "YOU";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(300, 100);
+            WaitForEnter();
+
+            NPCimageHolder.Remove(MCImage);
+            NPCimageHolder.Append(npcF1Image);
+
+            TextBubbleContent.Content = "umm. right..";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(600, 100);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "*checks script* so, uhh.. it says here im supposed to ask how you got here";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(600, 100);
+            WaitForEnter();
+
+            NPCimageHolder.Remove(npcF1Image);
+            NPCimageHolder.Append(npc2CryingImage);
+
+            TextBubbleContent.Content = "OMG I CANT BELIEVE YOU FORGOT THE     SCRIPT AGAIN!!!";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person 2";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(600, 50);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "YOU LITTERALLY HAVE 5 LINES";
+            TextBubbleContent.TextColor = new Color(255, 0, 0);
+            TextBubbleContent.FontSize = 50;
+            TextBubbleName.Content = "unknown person 2";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 500);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "aughh.. FROM THE TOP!";
+            TextBubbleContent.TextColor = new Color(255, 0, 0);
+            TextBubbleContent.FontSize = 50;
+            TextBubbleName.Content = "unknown person 2";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 500);
+            WaitForEnter();
+
+
+            BGFrame.Remove(background);
+            BGFrame.Append(forest);
+
+            rend(w, mainGUI);
+            currentOption = 0;
+            while (true)
+            {
+                ConsoleKeyInfo keypressed = Console.ReadKey(true);
+                if (keypressed.Key == ConsoleKey.DownArrow)
+                {
+                    texts[currentOption].TextColor = new Color(29, 23, 201);
+                    menuOptions[currentOption].Remove(Selected);
+                    if (currentOption < menuOptions.Length - 1)
+                    {
+                        currentOption++;
+                    }
+                    else
+                    {
+                        currentOption = 0;
+                    }
+                    menuOptions[currentOption].Append(Selected);
+                    texts[currentOption].TextColor = new Color(255, 00, 00);
+                    rend(w, mainGUI);
+                    Console.Beep(400, 30);
+                }
+
+                if (keypressed.Key == ConsoleKey.UpArrow)
+                {
+                    texts[currentOption].TextColor = new Color(29, 23, 201);
+                    menuOptions[currentOption].Remove(Selected);
+                    if (currentOption > 0)
+                    {
+                        currentOption--;
+                    }
+                    else
+                    {
+                        currentOption = menuOptions.Length - 1;
+                    }
+                    menuOptions[currentOption].Append(Selected);
+                    texts[currentOption].TextColor = new Color(255, 00, 00);
+                    rend(w, mainGUI);
+                    Console.Beep(600, 30);
+                }
+
+                if (keypressed.Key == ConsoleKey.Enter)
+                {
+                    Console.Beep(1200, 30);
+                    if (currentOption == 0)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            NPCBGFrame.Remove(forest);
+            NPCimageHolder.Remove(npc2CryingImage);
+
+            TextBubbleContent.Content = "umm.. hello?";
+            TextBubbleContent.TextColor = new Color(100, 100, 100);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 500);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "HELLO?";
+            TextBubbleContent.TextColor = new Color(255, 0, 0);
+            TextBubbleContent.FontSize = 60;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 500);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "...";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 60;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 500);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "...";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 500);
+            WaitForEnter();
+
+            TextBubbleContent.Content = ".....";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            NPCimageHolder.Append(npc2NormalImage);
+
+            TextBubbleContent.Content = "...";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person 2";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            NPCimageHolder.Remove(npc2NormalImage);
+            NPCimageHolder.Append(npc2CryingImage);
+
+            TextBubbleContent.Content = "YOU FORGOT THE EXCLAMATION MARKS";
+            TextBubbleContent.TextColor = new Color(255, 0, 0);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person 2";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(600, 600);
+            WaitForEnter();
+
+            NPCimageHolder.Remove(npc2CryingImage);
+            NPCimageHolder.Append(npcF1Image);
+
+            TextBubbleContent.Content = "why are we even doing this?";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            NPCimageHolder.Remove(npcF1Image);
+            NPCimageHolder.Append(npc2NormalImage);
+
+            TextBubbleContent.Content = ".. ....";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person 2";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "well, because..";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person 2";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "because...";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person 2";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "i dont know actually..";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person 2";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "it's just what we've always done";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person 2";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            NPCimageHolder.Remove(npc2NormalImage);
+            NPCimageHolder.Append(npcF1Image);
+
+            TextBubbleContent.Content = "who even told us to do this..";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "every day we sit here and give the same reactions";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "over";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "over and";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+            TextBubbleContent.Content = "over and over";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "again";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "again and";
+            TextBubbleContent.TextColor = new Color(255, 100, 100);
+            TextBubbleContent.FontSize = 40;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "again and AGAIN";
+            TextBubbleContent.TextColor = new Color(255, 0, 0);
+            TextBubbleContent.FontSize = 50;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "how about we do something";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "different";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            NPCimageHolder.Remove(npcF1Image);
+            NPCimageHolder.Append(npc2NormalImage);
+
+            TextBubbleContent.Content = "somthing different?";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person 2";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            TextBubbleContent.Content = "but this is all i've ever known";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person 2";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+            NPCimageHolder.Remove(npc2NormalImage);
+            NPCimageHolder.Append(npcF1Image);
+
+            TextBubbleContent.Content = "what do YOU think?";
+            TextBubbleContent.TextColor = new Color(255, 255, 255);
+            TextBubbleContent.FontSize = 30;
+            TextBubbleName.Content = "unknown person";
+            TextBubbleName.TextColor = new Color(255, 255, 255);
+
+            rend(w, NPCGUI);
+            Console.Beep(200, 250);
+            WaitForEnter();
+
+
+
+        }
+
+        static void WaitForEnter()
+        {
+            while (true)
+            {
+                ConsoleKey key = Console.ReadKey(true).Key;
+                if (key == ConsoleKey.Enter) { break; }
+            }
+        }
+        static void rend(Window w,GUI gui)
+        {
+            w.ProcessGUI(gui);
+            w.Update_optimise2();
+            w.Render_optimise();
         }
     }
 }
