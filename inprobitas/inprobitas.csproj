@@ -7,4 +7,12 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="depricated\Program.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="depricated\Program.txt" />
+  </ItemGroup>
+
 </Project>

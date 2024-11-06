@@ -316,6 +316,7 @@
 
             if (modifications == null) { this.modifications = new List<FrameModification>(); } else { this.modifications = modifications; }
         }
+        private UIdim lastSize;
         public override void Draw(Window w, UIdim AbsolutePosition, UIdim AbsoluteSize, UIdim Anchor)
         {
             UIdim TopLeftCorner = AbsolutePosition - Anchor;
@@ -325,9 +326,11 @@
             float scaleAmount = (scale.percentX + scale.percentY) / 2;
 
             UIdim scaledImageSize = new UIdim((int)(ImageSize.pixelX * scaleAmount), (int)(ImageSize.pixelY * scaleAmount),0f,0f);
-
-            GeneratePerFrameImage(scaledImageSize);
-
+            if (scaledImageSize != lastSize)
+            {
+                GeneratePerFrameImage(scaledImageSize);
+            }
+            lastSize = scaledImageSize;
             w.FillWithAt(ImageDataPerFrame, (ushort)TopLeftCorner.pixelX,(ushort)TopLeftCorner.pixelY, (ushort)scaledImageSize.pixelX, (ushort)scaledImageSize.pixelY);
 
 
@@ -390,6 +393,11 @@
         public void Append(GuiElement element)
         {
             Children.Add(element);
+        }
+
+        public void Remove(GuiElement element)
+        {
+            Children.Remove(element);
         }
 
         public List<GuiElement> GetChildren(bool sorted = true)

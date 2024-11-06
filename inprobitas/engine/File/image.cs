@@ -6,7 +6,7 @@ namespace inprobitas.engine.Files
     public static class Image
     {
         // decompresses images using runlength compression
-        public static UInt32[] UnpackImage(string FilePath, int frameWidth, int frameHeight)
+        public static UInt32[] UnpackImage(string FilePath, int frameWidth, int frameHeight, bool alpha)
         {
             UInt32[] buf = new UInt32[frameWidth*frameHeight]; Populate(buf, 0u);
             if (!File.Exists(FilePath))
@@ -23,12 +23,18 @@ namespace inprobitas.engine.Files
                     byte r = reader.ReadByte();
                     byte g = reader.ReadByte();
                     byte b = reader.ReadByte();
+                    Graphics.Color packedColor = new Graphics.Color(r, g, b, 255);
+                    if (alpha)
+                    {
+                        byte a = reader.ReadByte();
+                        packedColor.a = a;
+                    }
 
                     for (int i = 0; i < repeatedCount; i++)
                     {
                         if (pixelIndex < buf.Length)
                         {
-                            buf[pixelIndex] = new Color(r,g,b).ToUint32();
+                            buf[pixelIndex] = packedColor.ToUint32();
                             pixelIndex++;
                         }
                     }

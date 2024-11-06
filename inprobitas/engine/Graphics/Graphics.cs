@@ -155,7 +155,10 @@ namespace inprobitas.engine.Graphics
 
             if (col.a < 255)
             {
-                ColorBuffer[x + y * _Width] = Color.BlendColors(ColorBuffer[x + y * _Width], col.ToUint32());
+                if (col.a > 4)
+                {
+                    ColorBuffer[x + y * _Width] = Color.BlendColors(ColorBuffer[x + y * _Width], col.ToUint32());
+                }
             } else
             {
                 ColorBuffer[x + y * _Width] = col.ToUint32();
@@ -189,7 +192,10 @@ namespace inprobitas.engine.Graphics
                     byte a = (byte)col;
                     if (a < 255)
                     {
-                        ColorBuffer[(x + X) + (y + Y) * _Width] = Color.BlendColors(ColorBuffer[(x + X) + (y + Y) * _Width],col);
+                        if (a > 4)
+                        {
+                            ColorBuffer[(x + X) + (y + Y) * _Width] = Color.BlendColors(ColorBuffer[(x + X) + (y + Y) * _Width], col);
+                        }
                     } else
                     {
                         ColorBuffer[(x + X) + (y + Y) * _Width] = col;
@@ -213,7 +219,10 @@ namespace inprobitas.engine.Graphics
                     if (X > _Width || X < 0) { continue; }
                     if (col.a < 255)
                     {
-                        ColorBuffer[X + Y * _Width] = Color.BlendColors(ColorBuffer[X + Y * _Width],col.ToUint32());
+                        if (col.a > 4)
+                        {
+                            ColorBuffer[X + Y * _Width] = Color.BlendColors(ColorBuffer[X + Y * _Width], col.ToUint32());
+                        }
                     }
                     else
                     {

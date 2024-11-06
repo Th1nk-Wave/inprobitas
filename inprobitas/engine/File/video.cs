@@ -3,7 +3,7 @@ namespace inprobitas.engine.Files
     public static class Video
     {
         // decompresses frames using runlength compression
-        public static List<UInt32[]> UnpackFrames(string filePath, int frameWidth, int frameHeight)
+        public static List<UInt32[]> UnpackFrames(string filePath, int frameWidth, int frameHeight, bool alpha)
         {
             List<UInt32[]> AllFrames = new List<UInt32[]>();
 
@@ -26,14 +26,21 @@ namespace inprobitas.engine.Files
                         byte g = reader.ReadByte();
                         byte b = reader.ReadByte();
 
-                        UInt32 packedColor = new Graphics.Color(r, g, b).ToUint32();
+                        Graphics.Color packedColor = new Graphics.Color(r, g, b, 255);
+                        if (alpha)
+                        {
+                            byte a = reader.ReadByte();
+                            packedColor.a = a;
+                        }
+
+                        
 
                         // Fill frame buffer with repeated colors
                         for (int i = 0; i < repeatedCount; i++)
                         {
                             if (pixelIndex < frameBuffer.Length)
                             {
-                                frameBuffer[pixelIndex] = packedColor;
+                                frameBuffer[pixelIndex] = packedColor.ToUint32();
                                 pixelIndex++;
                             }
                         }

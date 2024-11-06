@@ -1,0 +1,137 @@
+import cv2
+import time
+import os
+import numpy as np
+from PIL import Image as PILImage, ImageSequence  # Import PIL for GIF support
+
+unique_colors = 255
+
+def downscale_and_extract_rgba(input_path, output_frame_size=(64, 48), output_file="output.txt",white_is_transparrent=False):
+    # Check if input path is a video, image, or GIF file
+    is_video = input_path.endswith(('.mp4', '.avi', '.mov'))
+    is_image = input_path.endswith(('.jpg', '.jpeg', '.png', '.bmp', '.tiff'))
+    is_gif = input_path.endswith('.gif')
+
+    if not (is_video or is_image or is_gif):
+        print("Error: Unsupported file type.")
+        return
+
+    cap = None
+    frame_count = 1 if is_image or is_gif else None
+
+    if is_video:
+        cap = cv2.VideoCapture(input_path)
+        if not cap.isOpened():
+            print("Error: Could not open video.")
+            return
+        frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        print(f"Total frames to process: {frame_count}")
+    elif is_image:
+        frame = cv2.imread(input_path, cv2.IMREAD_UNCHANGED)
+        if frame is None:
+            print("Error: Could not open image.")
+            return
+    elif is_gif:
+        gif = PILImage.open(input_path)
+        frames = [frame.convert("RGBA") for frame in ImageSequence.Iterator(gif)]
+        frame_count = len(frames)
+        print(f"Total frames to process: {frame_count}")
+
+    current_frame = 0
+    start = time.perf_counter()
+
+    with open(output_file, "wb") as f:
+        buffer = bytearray()
+        
+        while (cap.isOpened() if is_video else current_frame < frame_count):
+            if is_video:
+                ret, frame = cap.read()
+                if not ret:
+                    print("Finished processing all frames.")
+                    break
+                frame = cv2.cvtColor(frame, cv2.COLOR_BGR2BGRA)  # Convert to BGRA to handle transparency
+            elif is_image:
+                # For single images, this runs only once
+                ret = True
+            elif is_gif:
+                frame = frames[current_frame]
+                frame = cv2.cvtColor(np.array(frame), cv2.COLOR_RGBA2BGRA)
+                ret = True
+
+            resized_frame = cv2.resize(frame, output_frame_size, interpolation=cv2.INTER_AREA)
+
+            # Check the number of channels in resized_frame and add alpha if needed
+            if resized_frame.shape[2] == 3:  # RGB only
+                # Add an alpha channel with full opacity (255)
+                resized_frame = cv2.cvtColor(resized_frame, cv2.COLOR_BGR2BGRA)
+
+            height, width, _ = resized_frame.shape
+            prevRGBA = None
+            repeated = 0
+
+            for y in range(height):
+                for x in range(width):
+                    b, g, r, a = resized_frame[y, x]
+                    currentRGBA = (int(r), int(g), int(b), int(a))
+                    
+                    if white_is_transparrent:
+                        if (int(r) == 255 and int(g) == 255 and int(b) == 255):
+                            currentRGBA = (int(r), int(g), int(b), 0)
+
+
+                    if currentRGBA == prevRGBA:
+                        repeated += 1
+                    else:
+                        if prevRGBA is not None:
+                            buffer.extend(repeated.to_bytes(4, "little"))
+                            buffer.extend(prevRGBA[0].to_bytes(1, "little"))
+                            buffer.extend(prevRGBA[1].to_bytes(1, "little"))
+                            buffer.extend(prevRGBA[2].to_bytes(1, "little"))
+                            buffer.extend(prevRGBA[3].to_bytes(1, "little"))
+
+                        repeated = 1
+                        prevRGBA = currentRGBA
+
+            if prevRGBA is not None:
+                buffer.extend(repeated.to_bytes(4, "little"))
+                buffer.extend(prevRGBA[0].to_bytes(1, "little"))
+                buffer.extend(prevRGBA[1].to_bytes(1, "little"))
+                buffer.extend(prevRGBA[2].to_bytes(1, "little"))
+                buffer.extend(prevRGBA[3].to_bytes(1, "little"))
+
+            f.write(buffer)
+            buffer.clear()
+
+            end = time.perf_counter()
+            if (end - start) > 1:
+                print(f"Processed frame {current_frame + 1}/{frame_count}")
+                start = time.perf_counter()
+
+            current_frame += 1
+            if not is_video and not is_gif:
+                break  # Only process once for single images
+
+    if is_video:
+        cap.release()
+
+    print("Processing complete.")
+
+
+
+output_size = (256,192)
+
+def convert_all_files(folder_path,output_folder):
+    for root, dirs, files in os.walk(folder_path):
+        for file in files:
+            filepath = os.path.join(root, file)
+            downscale_and_extract_rgba(filepath,output_size,output_folder+"/"+filepath.split("\\")[-1].split(".")[0]+".bitmap")
+
+
+output_folder = "ace attorney/characters/Phoenix Wright/behind defense bench/Encoded"
+folder_path = 'ace attorney/characters/Phoenix Wright/behind defense bench'
+
+
+
+convert_all_files(folder_path,output_folder)
+#downscale_and_extract_rgba("background-defense bench.png",(198,44),"defense bench.bitmap")
+
