@@ -23,7 +23,7 @@ namespace inprobitas
 
             courtroomMenu menu = new courtroomMenu();
             menu.SetRoom("defenseempty");
-            menu.SetCharacter("Phoenix Wright", "ohshit");
+            menu.SetCharacter("Phoenix Wright", "Objection");
             menu.Render(w);
             w.Update_optimise2();
             w.Render_optimise();
