@@ -6,7 +6,7 @@ from PIL import Image as PILImage, ImageSequence  # Import PIL for GIF support
 
 unique_colors = 255
 
-def downscale_and_extract_rgba(input_path, output_frame_size=(64, 48), output_file="output.txt",white_is_transparrent=False):
+def downscale_and_extract_rgba(input_path, output_frame_size=(64, 48), output_file="output.txt",white_is_transparrent=False,transparrent_color=(255,255,255)):
     # Check if input path is a video, image, or GIF file
     is_video = input_path.endswith(('.mp4', '.avi', '.mov'))
     is_image = input_path.endswith(('.jpg', '.jpeg', '.png', '.bmp', '.tiff'))
@@ -75,7 +75,7 @@ def downscale_and_extract_rgba(input_path, output_frame_size=(64, 48), output_fi
                     currentRGBA = (int(r), int(g), int(b), int(a))
                     
                     if white_is_transparrent:
-                        if (int(r) == 255 and int(g) == 255 and int(b) == 255):
+                        if (int(r) == transparrent_color[0] and int(g) == transparrent_color[1] and int(b) == transparrent_color[2]):
                             currentRGBA = (int(r), int(g), int(b), 0)
 
 
@@ -127,11 +127,14 @@ def convert_all_files(folder_path,output_folder):
             downscale_and_extract_rgba(filepath,output_size,output_folder+"/"+filepath.split("\\")[-1].split(".")[0]+".bitmap")
 
 
-output_folder = "ace attorney/characters/Phoenix Wright/behind defense bench/Encoded"
-folder_path = 'ace attorney/characters/Phoenix Wright/behind defense bench'
+#output_folder = "ace attorney/characters/Phoenix Wright/behind defense bench/Encoded"
+#folder_path = 'ace attorney/characters/Phoenix Wright/behind defense bench'
+output_folder = "ace attorney/scenes/scene resources/Encoded"
+folder_path = 'ace attorney/scenes/scene resources'
 
 
 
-convert_all_files(folder_path,output_folder)
-#downscale_and_extract_rgba("background-defense bench.png",(198,44),"defense bench.bitmap")
+
+#convert_all_files(folder_path,output_folder)
+downscale_and_extract_rgba(folder_path + "/the-thinker.png",(141,204),output_folder+"/the-thinker.bitmap",True,(0,255,255))
 

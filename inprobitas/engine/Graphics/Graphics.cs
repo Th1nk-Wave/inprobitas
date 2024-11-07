@@ -4,6 +4,8 @@ using static inprobitas.engine.Utility;
 
 using inprobitas.engine.Graphics;
 using System.Text;
+using System.Net.NetworkInformation;
+using System.Drawing;
 
 namespace inprobitas.engine.Graphics
 {
@@ -78,6 +80,10 @@ namespace inprobitas.engine.Graphics
     public class Window
     {
         private UInt32[] ColorBuffer;
+        private UInt32[] LastFrame;
+        private string optiRend;
+        public int _CompressionFactor;
+
         private UInt32[] CharColorBuffer;
         private char[] CharBuffer;
         private Boolean[] LineUpdates;
@@ -104,12 +110,19 @@ namespace inprobitas.engine.Graphics
             set { _Height = value; }
         }
 
-        public Window(UInt16 Width, UInt16 Height, Int16 FontSize)
+        public Window(UInt16 Width, UInt16 Height, Int16 FontSize, int CompressionFactor)
         {
             _Width = Width;
             _Height = Height;
 
-            ColorBuffer = new UInt32[Width * Height]; Populate(ColorBuffer, 0u);
+            ColorBuffer = new UInt32[Width * Height]; Populate(ColorBuffer, 1000000u);
+            LastFrame = new UInt32[Width * Height]; Populate(LastFrame, 0u);
+            _CompressionFactor = CompressionFactor;
+            //PixelUpdates = new bool[Width * Height]; Populate(PixelUpdates,false);
+
+            //PixelEdits = new byte[Width * Height]; Populate(PixelEdits, (byte)0);
+            //LastFramePixelEdits = new byte[Width * Height]; Populate(PixelEdits, (byte)0);
+
             CharColorBuffer = new UInt32[Width * Height * 2]; Populate(CharColorBuffer, 0u);
             CharBuffer = new char[Width * Height * 2]; Populate(CharBuffer, ' ');
             LineUpdates = new Boolean[Height]; Populate(LineUpdates, false);
@@ -148,21 +161,119 @@ namespace inprobitas.engine.Graphics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void SetPixel(UInt16 x, UInt16 y, Color col)
+        public void SetPixel(int x, int y, Color col)
         {
+            // check if pixel is out of bounds
             if (x < 0 || y < 0) { return; }
-            if (x > _Width || y > _Height) { return; }
+            if (x >= _Width || y >= _Height) { return; }
 
+            // prepack color
+            UInt32 packedColor = col.ToUint32();
+
+            // check if color is overwriting a duplicate
+            if (packedColor == ColorBuffer[x + y * _Width]) {  return; }
+
+            // color is (in bounds, is writing a different value)
+
+            // avoid expensive blending if a color is not transparrent
             if (col.a < 255)
             {
                 if (col.a > 4)
                 {
-                    ColorBuffer[x + y * _Width] = Color.BlendColors(ColorBuffer[x + y * _Width], col.ToUint32());
+                    ColorBuffer[x + y * _Width] = Color.BlendColors(ColorBuffer[x + y * _Width], packedColor);
                 }
             } else
             {
                 ColorBuffer[x + y * _Width] = col.ToUint32();
             }
+            
+            // finally, signal that this pixel has changed and thus needs to be rendered
+            LineUpdates[y] = true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetPixelInBounds(int x, int y, Color col) // same as SetPixel but with less checks
+        {
+            // prepack color
+            UInt32 packedColor = col.ToUint32();
+
+            // check if color is overwriting a duplicate
+            if (packedColor == ColorBuffer[x + y * _Width]) { return; }
+
+            // color is (in bounds, is writing a different value)
+
+            // avoid expensive blending if a color is not transparrent
+            if (col.a < 255)
+            {
+                if (col.a > 4)
+                {
+                    ColorBuffer[x + y * _Width] = Color.BlendColors(ColorBuffer[x + y * _Width], packedColor);
+                }
+            }
+            else
+            {
+                ColorBuffer[x + y * _Width] = col.ToUint32();
+            }
+
+            // finally, signal that this pixel has changed and thus needs to be rendered
+            LineUpdates[y] = true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetPixel(int x, int y, UInt32 col)
+        {
+            // check if pixel is out of bounds
+            if (x < 0 || y < 0) { return; }
+            if (x >= _Width || y >= _Height) { return; }
+
+            // check if color is overwriting a duplicate
+            if (col == ColorBuffer[x + y * _Width]) { return; }
+
+            // color is (in bounds, is writing a different value)
+
+            // avoid expensive blending if a color is not transparrent
+            if ((byte)col < 255)
+            {
+                if ((byte)col > 4)
+                {
+                    ColorBuffer[x + y * _Width] = Color.BlendColors(ColorBuffer[x + y * _Width], col);
+                }
+            }
+            else
+            {
+                ColorBuffer[x + y * _Width] = col;
+            }
+
+            // finally, signal that this pixel has changed and thus needs to be rendered
+            LineUpdates[y] = true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void SetPixelInBounds(int x, int y, UInt32 col) // same as SetPixel but with less checks
+        {
+            // check if color is overwriting a duplicate
+            //if (col == ColorBuffer[x + y * _Width]) { return; }
+            //if (col == LastFrame[x + y * _Width]){}
+
+            // color is (in bounds, is writing a different value)
+
+            // avoid expensive blending if a color is not transparrent
+            if ((byte)col < 255)
+            {
+                if ((byte)col > 4)
+                {
+                    ColorBuffer[x + y * _Width] = Color.BlendColors(ColorBuffer[x + y * _Width], col);
+                } else
+                {
+                    return;
+                }
+            }
+            else
+            {
+                ColorBuffer[x + y * _Width] = col;
+            }
+
+            // finally, signal that this pixel has changed and thus needs to be rendered
             LineUpdates[y] = true;
         }
         public Color GetPixel(UInt16 x, UInt16 y)
@@ -182,27 +293,37 @@ namespace inprobitas.engine.Graphics
             Populate(LineUpdates, true);
         }
 
-        public void FillWithAt(UInt32[] frame, UInt16 X, UInt16 Y, UInt16 Width, UInt16 Height)
+        public void FillWithAt(UInt32[] frame, int X, int Y, UInt16 Width, UInt16 Height)
         {
-            for (UInt16 y = 0; y < Height; y++)
+            for (int y = 0; y < Height; y++)
             {
-                for (UInt16 x = 0; x < Width; x++)
+                if (y+Y >= _Height || y+Y < 0) { continue; }
+                for (int x = 0; x < Width; x++)
                 {
+                    if (x+X >= _Width || x+X < 0) { continue; }
+
+                    //SetPixelInBounds(x+X,y+Y, (UInt32)frame[x + y*Width]);
+
                     UInt32 col = frame[x + y * Width];
-                    byte a = (byte)col;
-                    if (a < 255)
+                    if ((byte)col < 255)
                     {
-                        if (a > 4)
+                        if ((byte)col > 4)
                         {
-                            ColorBuffer[(x + X) + (y + Y) * _Width] = Color.BlendColors(ColorBuffer[(x + X) + (y + Y) * _Width], col);
+                            ColorBuffer[(x+X) + (y+Y) * _Width] = Color.BlendColors(ColorBuffer[(x + X) + (y + Y) * _Width], col);
                         }
-                    } else
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    else
                     {
                         ColorBuffer[(x + X) + (y + Y) * _Width] = col;
                     }
-                    
+
+                    // finally, signal that this pixel has changed and thus needs to be rendered
+                    LineUpdates[y+Y] = true;
                 }
-                LineUpdates[y+Y] = true;
             }
         }
 
@@ -213,10 +334,10 @@ namespace inprobitas.engine.Graphics
             UInt32 colUInt32 = col.ToUint32();
             for (short Y = (short)Y1; Y != Y2; Y+=StepY)
             {
-                if (Y > _Height || Y < 0) { continue; }
+                if (Y >= _Height || Y < 0) { continue; }
                 for (short X = (short)X1; X != X2; X+=StepX)
                 {
-                    if (X > _Width || X < 0) { continue; }
+                    if (X >= _Width || X < 0) { continue; }
                     if (col.a < 255)
                     {
                         if (col.a > 4)
@@ -264,7 +385,7 @@ namespace inprobitas.engine.Graphics
             gui.DecendTreeAndPlot(this);
         }
 
-        public void Update()
+        public void Update_old()
         {
             
             for (UInt16 ypos = 0; ypos < _Height; ypos++)
@@ -320,60 +441,8 @@ namespace inprobitas.engine.Graphics
         }
 
         private int renderer_PerLineEscapeSequenceOffset = "\x1b[;0H".Length + (int)Math.Floor(Math.Log10(1 + (int)UInt16.MaxValue));
-        public void Update_optimise()
-        {
-            for (UInt16 ypos = 0; ypos < _Height; ypos++)
-            {
-                UInt32 oldrgb = UInt32.MaxValue;
-                if (!LineUpdates[ypos]) { continue; }
 
-                string lineSTR = "";
-                UInt16 blankCount = 0;
-
-                for (UInt16 xpos = 0; xpos < _Width; xpos++)
-                {
-                    UInt32 rgb = ColorBuffer[xpos + ypos * _Width];
-                    if (rgb == oldrgb)
-                    {
-                        blankCount += 1;
-                    }
-                    else
-                    {
-                        if (blankCount > 0)
-                        {
-                            //lineSTR += new string(' ', blankCount * 2);
-                            lineSTR += new StringBuilder("  ".Length * blankCount).Insert(0, "  ", blankCount).ToString();
-                            blankCount = 0;
-                        }
-
-                        lineSTR += $"\x1b[48;2;{(byte)(rgb >> 8)};{(byte)(rgb >> 16)};{(byte)(rgb >> 24)}m  ";
-                    }
-                    oldrgb = rgb;
-                }
-                if (blankCount > 0)
-                {
-                    //lineSTR += new string(' ', blankCount * 2);
-                    lineSTR += new StringBuilder("  ".Length * blankCount).Insert(0, "  ", blankCount).ToString();
-                    blankCount = 0;
-                }
-
-                if (NeedRender[ypos])
-                {
-                    UpdateComplexity -= RenderStrings[ypos].Length;
-                    UpdateComplexity += lineSTR.Length;
-                } else
-                {
-                    UpdateComplexity += lineSTR.Length + renderer_PerLineEscapeSequenceOffset;
-                    UpdateStack.Push(ypos);
-                }
-
-                RenderStrings[ypos] = lineSTR;
-                LineUpdates[ypos] = false;
-                NeedRender[ypos] = true;
-            }
-        }
-
-        public void Update_optimise2()
+        public void Update_full()
         {
             for (UInt16 ypos = 0; ypos < _Height; ypos++)
             {
@@ -427,26 +496,163 @@ namespace inprobitas.engine.Graphics
             }
         }
 
-        public void Render()
+        /*
+        public void Update_optimise3()
         {
-            string renderSTR = "";
+            optiRend = "";
+            UInt32 OldCol = UInt32.MaxValue;
+            int Blanks = 0;
+            StringBuilder RenderSTR = new StringBuilder();
+            bool jumping = false;
             for (UInt16 ypos = 0; ypos < _Height; ypos++)
             {
-                if (NeedRender[ypos])
+                for (UInt16 xpos = 0; xpos < _Width; xpos++)
                 {
-                    //Console.Write($"\x1b[{ypos + 1};0H{RenderStrings[ypos]}");
-                    renderSTR += $"\x1b[{ypos + 1};0H{RenderStrings[ypos]}";
-                    NeedRender[ypos] = false;
+                    // check if this pixel has been changed recently
+                    bool NeedsUpdate = PixelUpdates[xpos + ypos * _Width];
+                    if (NeedsUpdate)
+                    {
+                        UInt32 col = ColorBuffer[xpos + ypos * _Width];
+
+                        if (jumping)
+                        {
+                            if (Blanks > 0) // deal with any ghost pixels
+                            {
+                                RenderSTR.Append(' ', Blanks * 2);
+                                Blanks = 0;
+                            }
+                            RenderSTR.Append($"\x1b[{ypos + 1};{xpos * 2 + 1}H"); // handle jumping
+                            jumping = false;
+                        }
+
+                        // if the pixel is the same color as the one beffore it
+                        if (col == OldCol)
+                        {
+                            Blanks++;
+                        } else // this is a new color now so we have to add color change command
+                        {
+                            if (Blanks > 0) // deal with any blanks first
+                            {
+                                RenderSTR.Append(' ', Blanks * 2);
+                                Blanks = 0;
+                            }
+                            // now you can start a new color chunk
+                            RenderSTR.Append($"\x1b[48;2;{(byte)(col >> 8)};{(byte)(col >> 16)};{(byte)(col >> 24)}m  ");
+                        }
+                        OldCol = col; // pass on current color to next pixel old col check
+
+                        PixelUpdates[xpos + ypos * _Width] = false; // this pixel has been successfully updated
+
+
+                    } else // if we ever jump over a pixel, (we might still have some blanks stored up that havn't been written yet)
+                    {
+                        UInt32 col = ColorBuffer[xpos + ypos * _Width];
+                        if (col == OldCol)
+                        {
+                            // ghost pixel logic
+                            Blanks++;
+                            OldCol = col; // carry on oldCol to next ghost pixel
+                            jumping = false;
+                        }
+                        else
+                        {
+                            // handle blanks beffore current pixel
+                            if (Blanks > 0)
+                            {
+                                RenderSTR.Append(' ', Blanks * 2);
+                                Blanks = 0; // we have successfully delt with the blanks
+                            }
+                            jumping = true; // we just jumped over a pixel so this flag is enabled so we know that we need to add a cursor setpos command later
+                        }
+                    }
                 }
             }
-            //Console.Write($"\x1b[{_Height + 1};0H");
-            renderSTR += $"\x1b[{_Height + 1};0H";
+
+            if (Blanks > 0) // deal with any blanks still left
+            {
+                RenderSTR.Append(' ', Blanks * 2);
+                Blanks = 0;
+            }
+
+            RenderSTR.Append($"\x1b[{_Height + 1};0H"); // finally, tell console to return the cursor to the bottem
+            optiRend = RenderSTR.ToString();
+        }
+        */
+        public bool RGBisclose(UInt32 col1, UInt32 col2)
+        {
+            // Extract components of the background color
+            byte c1R = (byte)(col1 >> 8);
+            byte c1G = (byte)(col1 >> 16);
+            byte c1B = (byte)(col1 >> 24);
+
+            // Extract components of the foreground color
+            byte c2R = (byte)(col2 >> 8);
+            byte c2G = (byte)(col2 >> 16);
+            byte c2B = (byte)(col2 >> 24);
+
+            bool Rclose = Math.Abs((int)c1R - (int)c2R) <= _CompressionFactor;
+            bool Gclose = Math.Abs((int)c1G - (int)c2G) <= _CompressionFactor;
+            bool Bclose = Math.Abs((int)c1B - (int)c2B) <= _CompressionFactor;
+            return (Rclose && Gclose && Bclose);
+        }
+        public void Update()
+        {
+            optiRend = "";
+            UInt32 OldCol = UInt32.MaxValue;
+            int Blanks = 0;
+            StringBuilder RenderSTR = new StringBuilder();
+            bool jumping = true;
+
+            for (UInt16 ypos = 0; ypos < _Height; ypos++)
+            {
+                RenderSTR.Append($"\x1b[{ypos + 1};0H");
+                for (UInt16 xpos = 0; xpos < _Width; xpos++)
+                {
+                    UInt32 col = ColorBuffer[xpos + ypos * _Width];
+                    UInt32 LastFcol = LastFrame[xpos + ypos * _Width];
+                    bool NeedsUpdate = col != LastFcol;
+
+
+                    if (NeedsUpdate)
+                    {
+                        if (jumping)
+                        {
+                            RenderSTR.Append($"\x1b[{ypos + 1};{xpos * 2 + 1}H");
+                            jumping = false;
+                        }
+
+                        if ((col == OldCol || RGBisclose(col, OldCol)) && !jumping)
+                        {
+                            RenderSTR.Append(' ',2);
+                        } else
+                        {
+                            RenderSTR.Append($"\x1b[48;2;{(byte)(col >> 8)};{(byte)(col >> 16)};{(byte)(col >> 24)}m  ");
+                            OldCol = col;
+                        }
+                        
+                    }
+                    else
+                    {
+                        jumping = true;
+                    }
+                }
+            }
+            //RenderSTR.Append($"\x1b[{_Height + 1};0H");
+            optiRend = RenderSTR.ToString();
+            ColorBuffer.CopyTo(LastFrame, 0);
+        }
+
+
+        public void Render()
+        {
             uint charsWritten = 0;
             nint reserved = 0;
-            WriteConsole(Hwindow, renderSTR, (uint)renderSTR.Length, out charsWritten, reserved);
+            WriteConsole(Hwindow, optiRend, (uint)optiRend.Length, out charsWritten, reserved);
         }
+
+
         private int renderer_FinalSuffixEscapeSequenceOffset = "\x1b[;0H".Length + (int)Math.Floor(Math.Log10(1 + (int)UInt16.MaxValue));
-        public void Render_optimise()
+        public void Render_full()
         {
 
             StringBuilder renderSTR = new StringBuilder(UpdateComplexity + renderer_FinalSuffixEscapeSequenceOffset);
