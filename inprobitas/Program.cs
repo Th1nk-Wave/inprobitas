@@ -19,7 +19,7 @@ namespace inprobitas
             UInt32[] courtroomHall = UnpackImage(assetsDir + "rooms/Encoded/courtroomHall.bitmap",Width,Height,true);
 
 
-            Window w = new Window((ushort)(Width), (ushort)(Height),4,2);
+            Window w = new Window((ushort)(Width), (ushort)(Height),4,1);
 
 
 
@@ -41,12 +41,13 @@ namespace inprobitas
                 currentFrame++;
                 if (currentFrame > blooddrip.Count - 1) { currentFrame = 0; }
                 w.Fill(new Color(0, 0, 0));
-                //w.FillWithAt(courtroomHall,0,0,Width,Height);
+                w.FillWithAt(courtroomHall,0,0,Width,Height);
                 w.FillWithAt(theThinkerImageData, 105, -176+down, 141, 204);
                 w.FillWithAt(blooddrip[currentFrame], 0, down, Width, Height);
                 w.Update();
                 w.Render();
                 if (down < 176) { down+=1; down = Math.Min(down, 176); }
+                //w._CompressionFactor = down;
             
             }
 
