@@ -4,8 +4,6 @@ import os
 import numpy as np
 from PIL import Image as PILImage, ImageSequence  # Import PIL for GIF support
 
-unique_colors = 255
-
 def downscale_and_extract_rgba(input_path, output_frame_size=(64, 48), output_file="output.txt",white_is_transparrent=False,transparrent_color=(255,255,255)):
     # Check if input path is a video, image, or GIF file
     is_video = input_path.endswith(('.mp4', '.avi', '.mov'))

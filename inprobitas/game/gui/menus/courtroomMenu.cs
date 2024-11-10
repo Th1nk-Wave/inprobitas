@@ -28,7 +28,7 @@ namespace inprobitas.game.gui.menus
 
         public courtroomMenu()
         {
-            defenseBenchImageData = UnpackImage(projectDirectory + "/game/gui/resources/ace attorney/misc/Encoded/defense bench.bitmap", 198, 44, true);
+            defenseBenchImageData = UnpackImage(projectDirectory + "/game/gui/resources/ace attorney/misc/Encoded/defense bench.bitmap", true);
             DefenseBenchImage = new Image(new UIdim(0, 0, 0f, 1f), new UIdim(198, 44, 0f, 0f), new UIdim(0, 0, 0f, 1f), 2, new UIdim(198, 44, 0f, 0f), defenseBenchImageData, new UIdim(198, 44, 0f, 0f));
 
             courtroomGUI = new GUI(Width, Height); courtroomGUI.Append(DefenseBenchImage);
@@ -50,7 +50,7 @@ namespace inprobitas.game.gui.menus
             RoomImage = null;
 
 
-            RoomImageData = UnpackImage(RoomDir + Name + ".bitmap", Width, Height, true);
+            RoomImageData = UnpackImage(RoomDir + Name + ".bitmap", true);
 
             RoomImage = new Image(new UIdim(0,0,0f,0f), new UIdim(Width, Height, 0f, 0f), new UIdim(0, 0, 0f, 0f),0, new UIdim(Width, Height, 0f, 0f),RoomImageData, new UIdim(Width, Height, 0f, 0f));
             courtroomGUI.Append(RoomImage);
@@ -70,7 +70,7 @@ namespace inprobitas.game.gui.menus
             CharacterImage = null;
 
 
-            CharacterAnimData = UnpackFrames(CharacterDir + Name + "/behind defense bench/Encoded/" + action + ".bitmap", Width, Height, true);
+            CharacterAnimData = UnpackFrames(CharacterDir + Name + "/behind defense bench/Encoded/" + action + ".bitmap", true);
 
             CharacterImage = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(Width, Height, 0f, 0f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(Width, Height, 0f, 0f), CharacterAnimData[0], new UIdim(Width, Height, 0f, 0f));
             courtroomGUI.Append(CharacterImage);

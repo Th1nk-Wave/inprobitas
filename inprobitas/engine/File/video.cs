@@ -3,7 +3,7 @@ namespace inprobitas.engine.Files
     public static class Video
     {
         // decompresses frames using runlength compression
-        public static List<UInt32[]> UnpackFrames(string filePath, int frameWidth, int frameHeight, bool alpha)
+        public static List<UInt32[]> UnpackFrames(string filePath, bool alpha)
         {
             List<UInt32[]> AllFrames = new List<UInt32[]>();
 
@@ -12,7 +12,9 @@ namespace inprobitas.engine.Files
                 while (reader.BaseStream.Position < reader.BaseStream.Length)
                 {
                     // Create buffer for current frame
-                    UInt32[] frameBuffer = new UInt32[frameWidth * frameHeight];
+                    UInt16 FrameWidth = reader.ReadUInt16();
+                    UInt16 FrameHeight = reader.ReadUInt16();
+                    UInt32[] frameBuffer = new UInt32[FrameWidth * FrameHeight];
                     int pixelIndex = 0;
 
                     while (pixelIndex < frameBuffer.Length)

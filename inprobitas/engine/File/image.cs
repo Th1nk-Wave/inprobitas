@@ -6,15 +6,21 @@ namespace inprobitas.engine.Files
     public static class Image
     {
         // decompresses images using runlength compression
-        public static UInt32[] UnpackImage(string FilePath, int frameWidth, int frameHeight, bool alpha)
+        public static UInt32[] UnpackImage(string FilePath, bool alpha)
         {
-            UInt32[] buf = new UInt32[frameWidth*frameHeight]; Populate(buf, 0u);
+            
             if (!File.Exists(FilePath))
             {
-                return buf;
+                throw new FileNotFoundException("could not find file", FilePath);
             }
+            UInt32[] buf;
             using (BinaryReader reader = new BinaryReader(File.Open(FilePath, FileMode.Open)))
             {
+                Int16 FrameWidth = reader.ReadInt16();
+                Int16 FrameHeight = reader.ReadInt16();
+
+                buf = new UInt32[FrameWidth * FrameHeight]; Populate(buf, 0u);
+
                 int pixelIndex = 0;
                 while (reader.BaseStream.Position < reader.BaseStream.Length)
                 {

@@ -16,18 +16,18 @@ namespace inprobitas
         {
             string assetsDir = projectDirectory + "/game/gui/resources/ace attorney/";
             //List<UInt32[]> PhoenixWrightObjection = UnpackFrames(assetsDir + "characters/Phoenix Wright/behind defense bench/Encoded/Phoenix_Objection.bitmap", Width, Height, true);
-            UInt32[] courtroomHall = UnpackImage(assetsDir + "rooms/Encoded/courtroomHall.bitmap",Width,Height,true);
+            UInt32[] courtroomHall = UnpackImage(assetsDir + "rooms/Encoded/courtroomHall.bitmap",true);
 
 
-            Window w = new Window((ushort)(Width), (ushort)(Height),4,1);
+            Window w = new Window((ushort)(Width), (ushort)(Height),4,25);
 
 
 
             
 
 
-            UInt32[] theThinkerImageData = UnpackImage(assetsDir + "scenes/scene resources/Encoded/the-thinker.bitmap",141,204,true);
-            List<UInt32[]> blooddrip = UnpackFrames(assetsDir + "scenes/scene resources/Encoded/blooddrop.bitmap", Width, Height, true);
+            UInt32[] theThinkerImageData = UnpackImage(assetsDir + "scenes/scene resources/Encoded/the-thinker.bitmap",true);
+            List<UInt32[]> blooddrip = UnpackFrames(assetsDir + "scenes/scene resources/Encoded/blooddrop.bitmap", true);
             w.Fill(new Color(0,0,0));
             w.FillWithAt(theThinkerImageData,105,-176,141,204);
             w.FillWithAt(blooddrip[0], 0,0,Width,Height);
