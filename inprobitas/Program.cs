@@ -16,40 +16,18 @@ namespace inprobitas
         {
             string assetsDir = projectDirectory + "/game/gui/resources/ace attorney/";
             //List<UInt32[]> PhoenixWrightObjection = UnpackFrames(assetsDir + "characters/Phoenix Wright/behind defense bench/Encoded/Phoenix_Objection.bitmap", Width, Height, true);
-            UInt32[] courtroomHall = UnpackImage(assetsDir + "rooms/Encoded/courtroomHall.bitmap",true);
+            UInt32[] courtroomHall = UnpackImage(assetsDir + "rooms/Encoded/courtroomHall.bitmap", true);
 
 
-            Window w = new Window((ushort)(Width), (ushort)(Height),4,25);
+            Window w = new Window((ushort)(Width), (ushort)(Height), 4, 25);
+
+
 
 
 
             
-
-
-            UInt32[] theThinkerImageData = UnpackImage(assetsDir + "scenes/scene resources/Encoded/the-thinker.bitmap",true);
-            List<UInt32[]> blooddrip = UnpackFrames(assetsDir + "scenes/scene resources/Encoded/blooddrop.bitmap", true);
-            w.Fill(new Color(0,0,0));
-            w.FillWithAt(theThinkerImageData,105,-176,141,204);
-            w.FillWithAt(blooddrip[0], 0,0,Width,Height);
-            //w.FillWithAt(courtroomHall, 0, 0, Width, Height);
-            //w.Update_full();
-
-            int currentFrame = 0;
-            int down = 0;
-            while (true)
-            {
-                currentFrame++;
-                if (currentFrame > blooddrip.Count - 1) { currentFrame = 0; }
-                w.Fill(new Color(0, 0, 0));
-                w.FillWithAt(courtroomHall,0,0,Width,Height);
-                w.FillWithAt(theThinkerImageData, 105, -176+down, 141, 204);
-                w.FillWithAt(blooddrip[currentFrame], 0, down, Width, Height);
-                w.Update();
-                w.Render();
-                if (down < 176) { down+=1; down = Math.Min(down, 176); }
-                //w._CompressionFactor = down;
             
-            }
+
 
 
             courtroomMenu menu = new courtroomMenu();
@@ -65,7 +43,7 @@ namespace inprobitas
                 menu.Render(w);
                 w.Update();
                 w.Render();
-                Thread.Sleep(150);
+                Thread.Sleep(140);
             }
 
             return;
@@ -82,8 +60,8 @@ namespace inprobitas
             //
             //}
 
-            UInt32[] theThinkerImageData = UnpackImage(assetsDir + "scenes/scene resources/Encoded/the-thinker.bitmap", 141, 204, true);
-            List<UInt32[]> blooddrip = UnpackFrames(assetsDir + "scenes/scene resources/Encoded/blooddrop.bitmap", Width, Height, true);
+            UInt32[] theThinkerImageData = UnpackImage(assetsDir + "scenes/scene resources/Encoded/the-thinker.bitmap", true);
+            List<UInt32[]> blooddrip = UnpackFrames(assetsDir + "scenes/scene resources/Encoded/blooddrop.bitmap", true);
             w.Fill(new Color(0, 0, 0));
             w.FillWithAt(theThinkerImageData, 105, -176, 141, 204);
             w.FillWithAt(blooddrip[0], 0, 0, Width, Height);
@@ -118,7 +96,7 @@ namespace inprobitas
                 if (key == ConsoleKey.Enter) { break; }
             }
         }
-        static void rend(Window w,GUI gui)
+        static void rend(Window w, GUI gui)
         {
             w.ProcessGUI(gui);
         }
