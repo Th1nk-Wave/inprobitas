@@ -276,7 +276,6 @@
 
     public class Image : GuiElement
     {
-        List<FrameModification> modifications;
         private List<string> BakedFrame;
         public UIdim ImageSize;
         public UIdim ImageRealSize;
@@ -314,7 +313,7 @@
 
             GenerateScaledImage();
 
-            if (modifications == null) { this.modifications = new List<FrameModification>(); } else { this.modifications = modifications; }
+            //if (modifications == null) { this.modifications = new List<FrameModification>(); } else { this.modifications = modifications; }
         }
         private UIdim lastSize;
         public override void Draw(Window w, UIdim AbsolutePosition, UIdim AbsoluteSize, UIdim Anchor)
