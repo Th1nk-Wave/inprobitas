@@ -72,9 +72,9 @@
                 switch (index)
                 {
                     case 0: return this.pixelX;
-                    case 1: return this.pixelX;
-                    case 2: return this.pixelX;
-                    case 3: return this.pixelX;
+                    case 1: return this.pixelY;
+                    case 2: return this.percentX;
+                    case 3: return this.percentY;
                     default: throw new ArgumentOutOfRangeException(nameof(index), index, "who the fuck even gets members of a struct by indexing it like a list\n its slower to use the square brackets you know ;)");
                 }
             }
