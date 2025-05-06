@@ -19,7 +19,7 @@ namespace inprobitas
             UInt32[] courtroomHall = UnpackImage(assetsDir + "rooms/Encoded/courtroomHall.bitmap", true);
 
 
-            Window w = new Window((ushort)(Width), (ushort)(Height), 4, 25);
+            Window w = new Window((ushort)(Width), (ushort)(Height), 4, 0);
 
 
 
@@ -32,7 +32,7 @@ namespace inprobitas
 
             courtroomMenu menu = new courtroomMenu();
             menu.SetRoom("defenseempty");
-            menu.SetCharacter("Phoenix Wright", "Objection");
+            menu.SetCharacter("Phoenix Wright", "ohshit");
             menu.Render(w);
             w.Update();
             w.Render();

@@ -1,77 +1,75 @@
-IMPORT textbox textbox;
 
 
-LOAD_IMAGE the-thinker thinker;
-LOAD_VIDEO blooddrop drop;
+LOAD_IMAGE the-thinker thinker
+LOAD_VIDEO blooddrop drop
 
 
-LOAD_IMAGE deadgirl deadperson;
-LOAD_VIDEO bloodpool pool;
+LOAD_IMAGE deadgirl deadperson
+LOAD_VIDEO bloodpool pool
 
-DEFINE thinkerY -176;
-DEFINE dropY 0;
-DEFINE dropFrame 0;
+DEFINE thinkerY -176
+DEFINE dropY 0
+DEFINE dropFrame 0
 
-DEFINE text_line1 "";
+DEFINE text_line1 ""
 
 // -------------------pan up thinker on black background-------------------
-SET_POS thinker 105 -176;
-SET_POS drop 0 0;
+SET_POS thinker 105 -176
+SET_POS drop 0 0
 
 
 // scheduled anim for blood drop
-SCHEDULE 1140, 9120;
-SET_FRAME drop 1;
-WAIT 250;
-SET_FRAME drop 2;
-WAIT 110;
-SET_FRAME drop 3;
-WAIT 100;
-SET_FRAME drop 4;
-WAIT 80;
-SET_FRAME drop 5;
-WAIT 60;
-SET_FRAME drop 6;
-WAIT 60;
-SET_FRAME drop 7;
-WAIT 60;
-SET_FRAME drop 8;
-WAIT 60;
-SET_FRAME drop 9;
-WAIT 60;
-SET_FRAME drop 10;
-WAIT 60;
-SET_FRAME drop 11;
-WAIT 60;
-SET_FRAME drop 12;
-WAIT 60;
-SET_FRAME drop 13;
-WAIT 60;
-SET_FRAME drop 14;
-WAIT 60;
-SET_FRAME drop 15;
-WAIT 60;
-END_DEF;
+SCHEDULE 1140, 9120
+SET_FRAME drop 1
+WAIT 250
+SET_FRAME drop 2
+WAIT 110
+SET_FRAME drop 3
+WAIT 100
+SET_FRAME drop 4
+WAIT 80
+SET_FRAME drop 5
+WAIT 60
+SET_FRAME drop 6
+WAIT 60
+SET_FRAME drop 7
+WAIT 60
+SET_FRAME drop 8
+WAIT 60
+SET_FRAME drop 9
+WAIT 60
+SET_FRAME drop 10
+WAIT 60
+SET_FRAME drop 11
+WAIT 60
+SET_FRAME drop 12
+WAIT 60
+SET_FRAME drop 13
+WAIT 60
+SET_FRAME drop 14
+WAIT 60
+SET_FRAME drop 15
+WAIT 60
+END_DEF
 
-WAIT 3420;
+WAIT 3420
 
 SHOW textbox
-SET_PROPERTY textbox line1 "*gasp*...";
-WAIT 600;
-APPEND_TO_PROPERTY textbox line1 "*gasp*...";
+SET_PROPERTY textbox line1 "*gasp*..."
+WAIT 600
+APPEND_TO_PROPERTY textbox line1 "*gasp*..."
 
 
 WAIT 9120;
 
 // scheduled anim for moving thinker and blood drop
-SCHEDULE 100, 5000;
-SUB thinkerY 1;
-SUB dropY 1;
-SET_POS thinker 105 #dropY;
-SET_POS dropY;
-END_DEF;
+SCHEDULE 100 5000
+SUB thinkerY 1
+SUB dropY 1
+SET_POS thinker 105 #dropY
+END_DEF
 
 //
 
-SHOW thinker;
-SHOW drop;
+SHOW thinker
+SHOW drop
