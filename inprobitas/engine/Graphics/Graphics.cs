@@ -226,10 +226,6 @@ namespace inprobitas.engine.Graphics
             if (x < 0 || y < 0) { return; }
             if (x >= _Width || y >= _Height) { return; }
 
-            // check if color is overwriting a duplicate
-            if (col == ColorBuffer[x + y * _Width]) { return; }
-
-            // color is (in bounds, is writing a different value)
 
             // avoid expensive blending if a color is not transparrent
             if ((byte)col < 255)

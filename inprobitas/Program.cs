@@ -7,6 +7,7 @@ using static inprobitas.game.settings.GraphicsSettings;
 using inprobitas.game.gui.menus;
 using System.ComponentModel.Design;
 using System.Text;
+using System.Timers;
 
 namespace inprobitas
 {
@@ -19,9 +20,29 @@ namespace inprobitas
             UInt32[] courtroomHall = UnpackImage(assetsDir + "rooms/Encoded/courtroomHall.bitmap",true);
 
 
-            Window w = new Window((ushort)(Width), (ushort)(Height),4,25);
+            Window w = new Window((ushort)(Width), (ushort)(Height),4,0);
+
+            GUI test = new GUI(Width,Height);
+
+            Frame background = new Frame(new UIdim(0,0,0f,0f),new UIdim(Width,Height,0f,0f),new UIdim(0,0,0f,0f),0);
+            Background background1 = new Background(new Color(255, 0, 0));
+            background.Append(background1);
+
+            test.Append(background);
+
+            w.ProcessGUI(test);
+            w.Update();
+            w.Render();
+
+            Image idk = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(0, 0, 0.5f, 0.5f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(Width,Height,0f,0f) ,UnpackImage(assetsDir + "scenes/scene resources/Encoded/deadgirl.bitmap", true), new UIdim(Width, Height, 0f, 0f));
+            background.Append(idk);
+
+            w.ProcessGUI(test);
+            w.Update(); w.Render();
 
 
+
+            return;
 
             
 
@@ -34,21 +55,29 @@ namespace inprobitas
             //w.FillWithAt(courtroomHall, 0, 0, Width, Height);
             //w.Update_full();
 
-            int currentFrame = 0;
-            int down = 0;
+            
+
+            float currentFrame = 0;
+            float down = 0f;
+            DateTime beffore = DateTime.UtcNow;
+            DateTime after = beffore;
             while (true)
             {
-                currentFrame++;
-                if (currentFrame > blooddrip.Count - 1) { currentFrame = 0; }
+                DateTime after2 = DateTime.UtcNow;
+
                 w.Fill(new Color(0, 0, 0));
-                w.FillWithAt(courtroomHall,0,0,Width,Height);
-                w.FillWithAt(theThinkerImageData, 105, -176+down, 141, 204);
-                w.FillWithAt(blooddrip[currentFrame], 0, down, Width, Height);
+                //w.FillWithAt(courtroomHall,0,0,Width,Height);
+                w.FillWithAt(theThinkerImageData, 105, (int)(-176+down), 141, 204);
+                w.FillWithAt(blooddrip[(int)currentFrame], 0, (int)down, Width, Height);
+                
                 w.Update();
                 w.Render();
-                if (down < 176) { down+=1; down = Math.Min(down, 176); }
-                //w._CompressionFactor = down;
-            
+                after = DateTime.UtcNow;
+                
+                if (down < 176f) { down = ((float)(after - beffore).TotalMilliseconds / 1000f) * 45; down = Math.Min(down, 176f); }
+                currentFrame += (float)((after - after2).TotalMilliseconds) / 1000f * 10;
+                if (currentFrame > blooddrip.Count - 1) { currentFrame = 0f; }
+
             }
 
 
@@ -81,31 +110,6 @@ namespace inprobitas
             //    //Thread.Sleep(100);
             //
             //}
-
-            UInt32[] theThinkerImageData = UnpackImage(assetsDir + "scenes/scene resources/Encoded/the-thinker.bitmap", 141, 204, true);
-            List<UInt32[]> blooddrip = UnpackFrames(assetsDir + "scenes/scene resources/Encoded/blooddrop.bitmap", Width, Height, true);
-            w.Fill(new Color(0, 0, 0));
-            w.FillWithAt(theThinkerImageData, 105, -176, 141, 204);
-            w.FillWithAt(blooddrip[0], 0, 0, Width, Height);
-            //w.FillWithAt(courtroomHall, 0, 0, Width, Height);
-            //w.Update_full();
-
-            int currentFrame = 0;
-            int down = 0;
-            while (true)
-            {
-                currentFrame++;
-                if (currentFrame > blooddrip.Count - 1) { currentFrame = 0; }
-                w.Fill(new Color(0, 0, 0));
-                w.FillWithAt(courtroomHall, 0, 0, Width, Height);
-                w.FillWithAt(theThinkerImageData, 105, -176 + down, 141, 204);
-                w.FillWithAt(blooddrip[currentFrame], 0, down, Width, Height);
-                w.Update();
-                w.Render();
-                if (down < 176) { down += 1; down = Math.Min(down, 176); }
-                //w._CompressionFactor = down;
-
-            }
 
 
         }
