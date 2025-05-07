@@ -72,9 +72,9 @@
                 switch (index)
                 {
                     case 0: return this.pixelX;
-                    case 1: return this.pixelX;
-                    case 2: return this.pixelX;
-                    case 3: return this.pixelX;
+                    case 1: return this.pixelY;
+                    case 2: return this.percentX;
+                    case 3: return this.percentY;
                     default: throw new ArgumentOutOfRangeException(nameof(index), index, "who the fuck even gets members of a struct by indexing it like a list\n its slower to use the square brackets you know ;)");
                 }
             }
@@ -276,7 +276,6 @@
 
     public class Image : GuiElement
     {
-        List<FrameModification> modifications;
         private List<string> BakedFrame;
         public UIdim ImageSize;
         public UIdim ImageRealSize;
@@ -314,7 +313,7 @@
 
             GenerateScaledImage();
 
-            if (modifications == null) { this.modifications = new List<FrameModification>(); } else { this.modifications = modifications; }
+            //if (modifications == null) { this.modifications = new List<FrameModification>(); } else { this.modifications = modifications; }
         }
         private UIdim lastSize;
         public override void Draw(Window w, UIdim AbsolutePosition, UIdim AbsoluteSize, UIdim Anchor)
