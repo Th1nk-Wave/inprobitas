@@ -36,7 +36,8 @@ namespace inprobitas.game.gui.menus
         TEXT3,
         WAIT_FOR_USER,
         SUB,
-        RENDER
+        RENDER,
+        BACKGROUND_COLOR,
     }
     struct SceneFrame
     {
@@ -55,9 +56,64 @@ namespace inprobitas.game.gui.menus
     {
         private List<SceneFrame> EventBuffer;
         private Dictionary<string, SceneResource> resources;
+        private static string ExtractText(string[] args)
+        {
+            if (args.Length < 2) return "";
+
+            List<string> quotedParts = new List<string>();
+            bool insideQuotes = false;
+
+            for (int i = 1; i < args.Length; i++)
+            {
+                string word = args[i];
+
+                if (!insideQuotes)
+                {
+                    if (word.StartsWith("\"") && word.EndsWith("\"") && word.Length > 1)
+                    {
+                        // Fully quoted in one word
+                        quotedParts.Add(word.Substring(1, word.Length - 2));
+                        break;
+                    }
+                    else if (word == "\"")
+                    {
+                        // Opening quote with nothing else
+                        insideQuotes = true;
+                    }
+                    else if (word.StartsWith("\""))
+                    {
+                        insideQuotes = true;
+                        quotedParts.Add(word.Substring(1));
+                    }
+                }
+                else
+                {
+                    if (word == "\"")
+                    {
+                        // Closing quote with nothing else
+                        break;
+                    }
+                    else if (word.EndsWith("\""))
+                    {
+                        quotedParts.Add(word.Substring(0, word.Length - 1));
+                        break;
+                    }
+                    else
+                    {
+                        quotedParts.Add(word);
+                    }
+                }
+            }
+
+            return string.Join(" ", quotedParts);
+        }
         public Cutscene(string SceneName)
         {
             Dictionary<string, string> variables = new Dictionary<string, string>();
+            variables["_TEXT1_content"] = "";
+            variables["_TEXT2_content"] = "";
+            variables["_TEXT3_content"] = "";
+
             resources = new Dictionary<string, SceneResource>();
             EventBuffer = new List<SceneFrame>();
             List<SceneFrame> ScheduleEventBuffer = new List<SceneFrame>();
@@ -245,119 +301,170 @@ namespace inprobitas.game.gui.menus
                             }
                         case "TEXT1":
                             {
-                                string arg1 = args[1];
-                                int i = 2;
-                                if (arg1[0] == '#') { arg1 = variables[arg1.Substring(1)]; }
-                                else if (arg1[0] == '"')
+                                string cat = ExtractText(args);
+                                int i = 0;
+                                bool same = true;
+                                for (i = 0; i < cat.Length; i++)
                                 {
-                                    if (i < args.Length - 1)
+
+                                    if (inSchedule)
                                     {
-                                        while (!args[i].EndsWith('"') && i < args.Length - 1)
+                                        if (variables["_TEXT1_content"].Length-1 >= i)
                                         {
-                                            arg1 += args[i];
-                                            i++;
+                                            if (!(variables["_TEXT1_content"][i] == cat[i] && same))
+                                            {
+                                                same = false;
+                                            }
+                                        } else
+                                        {
+                                            same = false;
                                         }
-                                    } else
+                                        if (!same)
+                                        {
+                                            ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 0, eventType = SceneEventType.TEXT1, arguments = new string[] { cat.Substring(0, i+1) } });
+                                            ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 20, eventType = SceneEventType.RENDER, arguments = new string[] { } });
+                                            ScheduleEventEnd += 2;
+                                        }
+                                        
+                                    }
+                                    else
                                     {
-                                        i = 1;
+                                        
+                                        EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.TEXT1, arguments = new string[] { cat.Substring(0, i+1) } });
+                                        elapsedTime += 20;
+                                        EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.RENDER, arguments = new string[] { } });
                                     }
                                 }
-                                string arg2 = "";
-                                if (i != 1)
+                                variables["_TEXT1_content"] = cat;
+
+                                Debug.WriteLine($"cat: [{cat}]");
+                                if (cat == "" || cat == " ")
                                 {
-                                    arg2 = args[i];
+                                    Debug.WriteLine("CATTTT");
+                                    if (inSchedule)
+                                    {
+                                        ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 0, eventType = SceneEventType.TEXT1, arguments = new string[] { " " } });
+                                        ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 20, eventType = SceneEventType.RENDER, arguments = new string[] { } });
+                                        ScheduleEventEnd += 2;
+                                    } else
+                                    {
+                                        EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.TEXT1, arguments = new string[] { " " } });
+                                        elapsedTime += 20;
+                                        EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.RENDER, arguments = new string[] { } });
+                                    }
                                 }
 
-                                string cat = (arg1 + arg2);
-
-                                if (inSchedule)
-                                {
-                                    ScheduleEventBuffer.Add(new SceneFrame { timeStamp =  ScheduleTime, eventType = SceneEventType.TEXT1, arguments = new string[] { cat.Substring(1,cat.Length-2) } });
-                                    ScheduleTime = 0;
-                                    ScheduleEventEnd++;
-                                } else
-                                {
-                                    EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.TEXT1, arguments = new string[] { cat.Substring(1, cat.Length - 1) } });
-                                }
                                 break;
                             }
                         case "TEXT2":
                             {
-                                string arg1 = args[1];
-                                int i = 2;
-                                if (arg1[0] == '#') { arg1 = variables[arg1.Substring(1)]; }
-                                else if (arg1[0] == '"')
+                                string cat = ExtractText(args);
+                                int i = 0;
+                                bool same = true;
+                                for (i = 0; i < cat.Length; i++)
                                 {
-                                    if (i < args.Length - 1)
+
+                                    if (inSchedule)
                                     {
-                                        while (!args[i].EndsWith('"') && i < args.Length - 1)
+                                        if (variables["_TEXT2_content"].Length - 1 >= i)
                                         {
-                                            arg1 += args[i];
-                                            i++;
+                                            if (!(variables["_TEXT2_content"][i] == cat[i] && same))
+                                            {
+                                                same = false;
+                                            }
                                         }
+                                        else
+                                        {
+                                            same = false;
+                                        }
+                                        if (!same)
+                                        {
+                                            ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 0, eventType = SceneEventType.TEXT2, arguments = new string[] { cat.Substring(0, i+1) } });
+                                            ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 20, eventType = SceneEventType.RENDER, arguments = new string[] { } });
+                                            ScheduleEventEnd += 2;
+                                        }
+
                                     }
                                     else
                                     {
-                                        i = 1;
+
+                                        EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.TEXT2, arguments = new string[] { cat.Substring(0, i+1) } });
+                                        elapsedTime += 20;
+                                        EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.RENDER, arguments = new string[] { } });
                                     }
                                 }
-                                string arg2 = "";
-                                if (i != 1)
-                                {
-                                    arg2 = args[i];
-                                }
+                                variables["_TEXT2_content"] = cat;
 
-                                string cat = (arg1 + arg2);
-
-                                if (inSchedule)
+                                if (cat == "" || cat == " ")
                                 {
-                                    ScheduleEventBuffer.Add(new SceneFrame { timeStamp = ScheduleTime, eventType = SceneEventType.TEXT2, arguments = new string[] { cat.Substring(1, cat.Length - 2) } });
-                                    ScheduleTime = 0;
-                                    ScheduleEventEnd++;
-                                }
-                                else
-                                {
-                                    EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.TEXT2, arguments = new string[] { cat.Substring(1, cat.Length - 1) } });
+                                    if (inSchedule)
+                                    {
+                                        ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 0, eventType = SceneEventType.TEXT2, arguments = new string[] { " " } });
+                                        ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 20, eventType = SceneEventType.RENDER, arguments = new string[] { } });
+                                        ScheduleEventEnd += 2;
+                                    }
+                                    else
+                                    {
+                                        EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.TEXT2, arguments = new string[] { " " } });
+                                        elapsedTime += 20;
+                                        EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.RENDER, arguments = new string[] { } });
+                                    }
                                 }
                                 break;
                             }
                         case "TEXT3":
                             {
-                                string arg1 = args[1];
-                                int i = 2;
-                                if (arg1[0] == '#') { arg1 = variables[arg1.Substring(1)]; }
-                                else if (arg1[0] == '"')
+                                string cat = ExtractText(args);
+                                int i = 0;
+                                bool same = true;
+                                for (i = 0; i < cat.Length; i++)
                                 {
-                                    if (i < args.Length - 1)
+
+                                    if (inSchedule)
                                     {
-                                        while (!args[i].EndsWith('"') && i < args.Length - 1)
+                                        if (variables["_TEXT3_content"].Length - 1 >= i)
                                         {
-                                            arg1 += args[i];
-                                            i++;
+                                            if (!(variables["_TEXT3_content"][i] == cat[i] && same))
+                                            {
+                                                same = false;
+                                            }
                                         }
+                                        else
+                                        {
+                                            same = false;
+                                        }
+                                        if (!same)
+                                        {
+                                            ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 0, eventType = SceneEventType.TEXT3, arguments = new string[] { cat.Substring(0, i+1) } });
+                                            ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 20, eventType = SceneEventType.RENDER, arguments = new string[] { } });
+                                            ScheduleEventEnd += 2;
+                                        }
+
                                     }
                                     else
                                     {
-                                        i = 1;
+
+                                        EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.TEXT3, arguments = new string[] { cat.Substring(0, i+1) } });
+                                        elapsedTime += 20;
+                                        EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.RENDER, arguments = new string[] { } });
                                     }
                                 }
-                                string arg2 = "";
-                                if (i != 1)
-                                {
-                                    arg2 = args[i];
-                                }
+                                variables["_TEXT3_content"] = cat;
 
-                                string cat = (arg1 + arg2);
-
-                                if (inSchedule)
+                                if (cat == "" || cat == " ")
                                 {
-                                    ScheduleEventBuffer.Add(new SceneFrame { timeStamp = ScheduleTime, eventType = SceneEventType.TEXT3, arguments = new string[] { cat.Substring(1, cat.Length - 2) } });
-                                    ScheduleTime = 0;
-                                    ScheduleEventEnd++;
-                                }
-                                else
-                                {
-                                    EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.TEXT3, arguments = new string[] { cat.Substring(1, cat.Length - 1) } });
+                                    if (inSchedule)
+                                    {
+                                        ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 0, eventType = SceneEventType.TEXT3, arguments = new string[] { "" } });
+                                        ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 20, eventType = SceneEventType.RENDER, arguments = new string[] { } });
+                                        ScheduleEventEnd += 2;
+                                    }
+                                    else
+                                    {
+                                        EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.TEXT3, arguments = new string[] { "" } });
+                                        elapsedTime += 20;
+                                        EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.RENDER, arguments = new string[] { } });
+                                    }
                                 }
                                 break;
                             }
@@ -397,7 +504,7 @@ namespace inprobitas.game.gui.menus
                                 while (expendedTime < (ScheduleTimeEnd - ScheduleTimeStart))
                                 {
                                     SceneFrame frame = ScheduleEventBuffer[i];
-                                    Debug.WriteLine($"Schedule: {expendedTime} {frame.eventType} {string.Join(",",frame.arguments)}");
+                                    //Debug.WriteLine($"Schedule: {expendedTime} {frame.eventType} {string.Join(",",frame.arguments)}");
                                     expendedTime += frame.timeStamp;
 
                                     SceneFrame copy = new SceneFrame();
@@ -473,6 +580,18 @@ namespace inprobitas.game.gui.menus
                                 }
                                 break;
                             }
+                        case "BACKGROUND_COLOR":
+                            {
+                                if (inSchedule)
+                                {
+                                    ScheduleEventBuffer.Add(new SceneFrame { timeStamp = 1, eventType = SceneEventType.BACKGROUND_COLOR, arguments = new string[] { args[1], args[2], args[3] } });
+                                    ScheduleEventEnd++;
+                                } else
+                                {
+                                    EventBuffer.Add(new SceneFrame { timeStamp = elapsedTime, eventType = SceneEventType.BACKGROUND_COLOR, arguments = new string[] { args[1], args[2], args[3] } });
+                                }
+                                break;
+                            }
                         case "//":
                             {
                                 break;
@@ -506,9 +625,9 @@ namespace inprobitas.game.gui.menus
             Frame Text3Align = new Frame(new UIdim(0, 0, 0.03f, 0.66f), new UIdim(0, 0, 0.97f, 0.33f), new UIdim(0, 0, 0f, 0f), 1000);
 
 
-            Text Text1 = new Text("", new Color(255, 255, 255), 15, "Comfortaa");
-            Text Text2 = new Text("", new Color(255, 255, 255), 15, "Comfortaa");
-            Text Text3 = new Text("", new Color(255, 255, 255), 15, "Comfortaa");
+            Text Text1 = new Text("", new Color(255, 255, 255), 15, "Ace-Attourney");
+            Text Text2 = new Text("", new Color(255, 255, 255), 15, "Ace-Attourney");
+            Text Text3 = new Text("", new Color(255, 255, 255), 15, "Ace-Attourney");
 
             Text1Align.Append(Text1);
             Text2Align.Append(Text2);
@@ -542,7 +661,7 @@ namespace inprobitas.game.gui.menus
             int elapsedTime = 0;
             foreach (SceneFrame f in EventBuffer)
             {
-                Debug.WriteLine($"look at this shit: [{f.timeStamp}][{f.timeStamp-elapsedTime}] {f.eventType} {string.Join(", ",f.arguments)}");
+                //Debug.WriteLine($"look at this shit: [{f.timeStamp}][{f.timeStamp-elapsedTime}] {f.eventType} {string.Join(", ",f.arguments)}");
                 switch(f.eventType)
                 {
                     case SceneEventType.SHOW:
@@ -580,22 +699,30 @@ namespace inprobitas.game.gui.menus
                         }
                     case SceneEventType.TEXT1:
                         {
+                            Debug.WriteLine($"string: {f.arguments[0]}");
                             Text1.Content = f.arguments[0];
                             break;
                         }
                     case SceneEventType.TEXT2:
                         {
+                            Debug.WriteLine($"string: {f.arguments[0]}");
                             Text2.Content = f.arguments[0];
                             break;
                         }
                     case SceneEventType.TEXT3:
                         {
+                            Debug.WriteLine($"string: {f.arguments[0]}");
                             Text3.Content = f.arguments[0];
                             break;
                         }
                     case SceneEventType.WAIT_FOR_USER:
                         {
                             Console.ReadKey(true);
+                            break;
+                        }
+                    case SceneEventType.BACKGROUND_COLOR:
+                        {
+                            backgroundCol.BackgroundColor = new Color((byte)uint.Parse(f.arguments[0]), (byte)uint.Parse(f.arguments[1]), (byte)uint.Parse(f.arguments[2]));
                             break;
                         }
                 }
@@ -606,7 +733,7 @@ namespace inprobitas.game.gui.menus
                     w.ProcessGUI(cutsceneGui);
                     w.Update();
                     w.Render();
-                    Debug.WriteLine("RENDERING!");
+                    //Debug.WriteLine("RENDERING!");
                 }
             }
         }

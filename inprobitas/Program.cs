@@ -22,23 +22,11 @@ namespace inprobitas
 
             Window w = new Window((ushort)(Width), (ushort)(Height),4,0);
 
-            GUI test = new GUI(Width,Height);
-
-            Frame background = new Frame(new UIdim(0,0,0f,0f),new UIdim(Width,Height,0f,0f),new UIdim(0,0,0f,0f),0);
-            Background background1 = new Background(new Color(255, 0, 0));
-            background.Append(background1);
-
-            test.Append(background);
-
-            w.ProcessGUI(test);
             w.Update();
             w.Render();
 
             //Image idk = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(0, 0, 0.5f, 0.5f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(Width,Height,0f,0f) ,UnpackImage(assetsDir + "scenes/scene resources/Encoded/deadgirl.bitmap", true), new UIdim(Width, Height, 0f, 0f));
             //background.Append(idk);
-
-            w.ProcessGUI(test);
-            w.Update(); w.Render();
 
             //Cutscene first_turnabout = new Cutscene("First-Turnabout-Intro");
             Cutscene first_turnabout = new Cutscene("test");

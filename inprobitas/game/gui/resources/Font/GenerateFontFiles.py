@@ -78,6 +78,6 @@ def generate_font_files(font_path, output_dir, image_size=(100, 100), font_size=
         print(f"Saved {output_file}")
 
 # Usage
-font_path = "Comfortaa/Comfortaa_Regular.ttf"
-output_dir = "Comfortaa/Encoded"
+font_path = "D:/stuff thats in better drive/programming/c# programming/inprobitas/inprobitas/game/gui/resources/Font/Ace-Attourney/Ace-Attorney.ttf"
+output_dir = "D:/stuff thats in better drive/programming/c# programming/inprobitas/inprobitas/game/gui/resources/Font/Ace-Attourney/Encoded/"
 generate_font_files(font_path, output_dir)

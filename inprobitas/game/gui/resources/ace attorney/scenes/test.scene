@@ -57,44 +57,20 @@ WAIT 1
 RENDER
 END_DEF
 
-SCHEDULE 3500 3702
-TEXT1 "*"
-WAIT 20
+SCHEDULE 3500 4382
+TEXT1 "*gasp*..." 20
 RENDER
-TEXT1 "*g"
-WAIT 20
+WAIT 500
 RENDER
-TEXT1 "*ga"
-WAIT 20
+TEXT1 "*gasp*... *gasp*..." 20
 RENDER
-TEXT1 "*gas"
-WAIT 20
-RENDER
-TEXT1 "*gasp"
-WAIT 20
-RENDER
-TEXT1 "*gasp"
-WAIT 20
-RENDER
-TEXT1 "*gasp*"
-WAIT 20
-RENDER
-TEXT1 "*gasp*."
-WAIT 20
-RENDER
-TEXT1 "*gasp*.."
-WAIT 20
-RENDER
-TEXT1 "*gasp*..."
-WAIT 20
-RENDER
-WAIT_FOR_USER
-WAIT 20
-RENDER
+WAIT 100
+HIDE_TEXT
+TEXT1 ""
 END_DEF
 
 // thinker and blood movement
-SCHEDULE 7200 9520
+SCHEDULE 5200 7560
 SUB thinkerY -3
 SUB dropY -3
 SET_POS thinker 105 #thinkerY
@@ -107,7 +83,7 @@ LOAD_IMAGE deadgirl victim
 LOAD_VIDEO bloodpool pool
 
 // dead girl scene
-SCHEDULE 12000 12002
+SCHEDULE 8500 8502
 HIDE thinker
 HIDE drop
 
@@ -118,7 +94,7 @@ RENDER
 END_DEF
 
 // animate blood pool
-SCHEDULE 12002 14560
+SCHEDULE 8502 11060
 SET_FRAME pool 1
 WAIT 360
 SET_FRAME pool 2
@@ -138,17 +114,42 @@ WAIT 380
 END_DEF
 
 // render blood pool
-SCHEDULE 12002 15560
+SCHEDULE 8502 12060
 WAIT 40
 RENDER
+END_DEF
+
+// dead girl text
+SCHEDULE 11060 11720
+SHOW_TEXT
+TEXT1 "Dammit!" 20
+RENDER
+WAIT 300
+RENDER
+TEXT1 "Dammit! ...Why me?" 20
+WAIT 100
+RENDER
+END_DEF
+
+// sahwit reacion1 text
+SCHEDULE 12100 14000
+HIDE victim
+HIDE pool
+RENDER
+WAIT 200
+RENDER
+TEXT1 "I can't get caught..."
+WAIT 800
+RENDER
+TEXT2 "Not like this!"
+WAIT 200
+HIDE_TEXT
 END_DEF
 
 LOAD_IMAGE sahwit-reaction-tall reaction1
 
 // sahwit tall scene
-SCHEDULE 15560 15562
-HIDE victim
-HIDE pool
+SCHEDULE 14060 14120
 SHOW reaction1
 WAIT 1
 RENDER
@@ -156,21 +157,120 @@ END_DEF
 
 // animate sahwit tall scene
 DEFINE reaction1Y -180
-SCHEDULE 15560 17200
-SUB reaction1Y -7
+SCHEDULE 14060 15700
+SUB reaction1Y -10
 SET_POS reaction1 0 #reaction1Y
-WAIT 70
+WAIT 100
+RENDER
+END_DEF
+
+// sahwit tall scene text
+SCHEDULE 15000 16000
+TEXT1 ""
+TEXT2 ""
+SHOW_TEXT
+TEXT1 "I I've gotta find someone"
+TEXT2 "to pin this on..."
+WAIT 140
 RENDER
 END_DEF
 
 LOAD_IMAGE sahwit-reaction-1 reaction2
+SET_POS reaction2 40 7
 
 // sahwit reaction 2
-SCHEDULE 18000 18002
+SCHEDULE 16500 16504
+HIDE_TEXT
 HIDE reaction1
 SHOW reaction2
 FLASH
-BACKGROUND_COLOR 100 100 100
+BACKGROUND_COLOR 16 16 16
 WAIT 1
 RENDER
+END_DEF
+
+LOAD_IMAGE sahwit-reaction-2 reaction3
+SET_POS reaction3 19 0
+
+// sahwit reaction 3
+SCHEDULE 17000 17004
+HIDE reaction2
+SHOW reaction3
+FLASH
+WAIT 1
+RENDER
+END_DEF
+
+LOAD_IMAGE sahwit-reaction-3 reaction4
+
+// sahwit reaction 4
+SCHEDULE 17500 17504
+HIDE reaction3
+SHOW reaction4
+FLASH
+WAIT 1
+RENDER
+END_DEF
+
+// reaction 4 text
+SCHEDULE 17600 20000
+TEXT1 ""
+TEXT2 ""
+SHOW_TEXT
+RENDER
+TEXT1 "Someone like..."
+WAIT 1000
+RENDER
+TEXT1 "Someone like... him!"
+WAIT 600
+RENDER
+HIDE_TEXT
+RENDER
+TEXT1 ""
+TEXT2 ""
+HIDE_TEXT
+RENDER
+WAIT 2000
+RENDER
+END_DEF
+
+LOAD_IMAGE sahwit-flashback-1 flashback1
+
+// flashback 1
+SCHEDULE 20000 20004
+HIDE reaction4
+FLASH
+SHOW flashback1
+WAIT 1
+RENDER
+END_DEF
+
+// recall from flashback
+SCHEDULE 20500 20505
+HIDE flashback1
+FADEIN
+SHOW reaction4
+WAIT 1
+RENDER
+END_DEF
+
+// recall text
+SCHEDULE 21000 23000
+TEXT1 ""
+TEXT2 ""
+SHOW_TEXT
+TEXT1 "I'll make it look like"
+WAIT 300
+TEXT2 "HE did it!"
+WAIT 1000
+HIDE_TEXT
+WAIT 1
+RENDER
+HIDE_TEXT
+TEXT1 ""
+TEXT2 ""
+HIDE_TEXT
+WAIT 1
+RENDER
+HIDE_TEXT
 END_DEF

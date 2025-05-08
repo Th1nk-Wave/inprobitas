@@ -15,4 +15,8 @@
     <Compile Include="depricated\Program.txt" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="game\gui\resources\Font\Ace-Attourney\Encoded\" />
+  </ItemGroup>
+
 </Project>
