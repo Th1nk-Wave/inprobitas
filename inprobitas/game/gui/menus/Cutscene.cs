@@ -245,7 +245,6 @@ namespace inprobitas.game.gui.menus
                             }
                         case "TEXT1":
                             {
-                                Debug.WriteLine($"TEXT1!!!!! {string.Join(", ",args)}");
                                 string arg1 = args[1];
                                 int i = 2;
                                 if (arg1[0] == '#') { arg1 = variables[arg1.Substring(1)]; }
