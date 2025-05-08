@@ -315,7 +315,7 @@
 
             //if (modifications == null) { this.modifications = new List<FrameModification>(); } else { this.modifications = modifications; }
         }
-        private UIdim lastSize;
+        public UIdim lastSize;
         public override void Draw(Window w, UIdim AbsolutePosition, UIdim AbsoluteSize, UIdim Anchor)
         {
             UIdim TopLeftCorner = AbsolutePosition - Anchor;
@@ -330,7 +330,7 @@
                 GeneratePerFrameImage(scaledImageSize);
             }
             lastSize = scaledImageSize;
-            w.FillWithAt(ImageDataPerFrame, (ushort)TopLeftCorner.pixelX,(ushort)TopLeftCorner.pixelY, (ushort)scaledImageSize.pixelX, (ushort)scaledImageSize.pixelY);
+            w.FillWithAt(ImageDataPerFrame, (short)TopLeftCorner.pixelX,(short)TopLeftCorner.pixelY, (ushort)scaledImageSize.pixelX, (ushort)scaledImageSize.pixelY);
 
 
         }

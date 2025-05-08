@@ -1,0 +1,176 @@
+LOAD_IMAGE the-thinker thinker
+LOAD_VIDEO blooddrop drop
+
+
+SHOW thinker
+SHOW drop
+
+SET_POS thinker 105 -176
+SET_POS drop 0 0
+
+DEFINE thinkerY -176
+DEFINE dropY 0
+
+// blood drop for thinker animation
+SCHEDULE 100 9520
+SET_FRAME drop 1
+WAIT 250
+SET_FRAME drop 2
+WAIT 110
+SET_FRAME drop 3
+WAIT 100
+SET_FRAME drop 4
+WAIT 80
+SET_FRAME drop 5
+WAIT 60
+SET_FRAME drop 6
+WAIT 60
+SET_FRAME drop 7
+WAIT 60
+SET_FRAME drop 8
+WAIT 60
+SET_FRAME drop 9
+WAIT 60
+SET_FRAME drop 10
+WAIT 60
+SET_FRAME drop 11
+WAIT 60
+SET_FRAME drop 12
+WAIT 60
+SET_FRAME drop 13
+WAIT 60
+SET_FRAME drop 14
+WAIT 60
+SET_FRAME drop 15
+WAIT 60
+END_DEF
+
+// blood rendering
+SCHEDULE 0 7200
+WAIT 60
+RENDER
+END_DEF
+
+SCHEDULE 3000 3002
+SHOW_TEXT
+WAIT 1
+RENDER
+END_DEF
+
+SCHEDULE 3500 3702
+TEXT1 "*"
+WAIT 20
+RENDER
+TEXT1 "*g"
+WAIT 20
+RENDER
+TEXT1 "*ga"
+WAIT 20
+RENDER
+TEXT1 "*gas"
+WAIT 20
+RENDER
+TEXT1 "*gasp"
+WAIT 20
+RENDER
+TEXT1 "*gasp"
+WAIT 20
+RENDER
+TEXT1 "*gasp*"
+WAIT 20
+RENDER
+TEXT1 "*gasp*."
+WAIT 20
+RENDER
+TEXT1 "*gasp*.."
+WAIT 20
+RENDER
+TEXT1 "*gasp*..."
+WAIT 20
+RENDER
+WAIT_FOR_USER
+WAIT 20
+RENDER
+END_DEF
+
+// thinker and blood movement
+SCHEDULE 7200 9520
+SUB thinkerY -3
+SUB dropY -3
+SET_POS thinker 105 #thinkerY
+SET_POS drop 0 #dropY
+WAIT 40
+RENDER
+END_DEF
+
+LOAD_IMAGE deadgirl victim
+LOAD_VIDEO bloodpool pool
+
+// dead girl scene
+SCHEDULE 12000 12002
+HIDE thinker
+HIDE drop
+
+SHOW victim
+SHOW pool
+WAIT 2
+RENDER
+END_DEF
+
+// animate blood pool
+SCHEDULE 12002 14560
+SET_FRAME pool 1
+WAIT 360
+SET_FRAME pool 2
+WAIT 360
+SET_FRAME pool 3
+WAIT 360
+SET_FRAME pool 4
+WAIT 360
+SET_FRAME pool 5
+WAIT 360
+SET_FRAME pool 6
+WAIT 380
+SET_FRAME pool 7
+WAIT 380
+SET_FRAME pool 8
+WAIT 380
+END_DEF
+
+// render blood pool
+SCHEDULE 12002 15560
+WAIT 40
+RENDER
+END_DEF
+
+LOAD_IMAGE sahwit-reaction-tall reaction1
+
+// sahwit tall scene
+SCHEDULE 15560 15562
+HIDE victim
+HIDE pool
+SHOW reaction1
+WAIT 1
+RENDER
+END_DEF
+
+// animate sahwit tall scene
+DEFINE reaction1Y -180
+SCHEDULE 15560 17200
+SUB reaction1Y -7
+SET_POS reaction1 0 #reaction1Y
+WAIT 70
+RENDER
+END_DEF
+
+LOAD_IMAGE sahwit-reaction-1 reaction2
+
+// sahwit reaction 2
+SCHEDULE 18000 18002
+HIDE reaction1
+SHOW reaction2
+FLASH
+BACKGROUND_COLOR 100 100 100
+WAIT 1
+RENDER
+END_DEF
