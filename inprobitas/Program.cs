@@ -10,6 +10,7 @@ using System.Text;
 using System.Timers;
 using static inprobitas.game.story.ScriptParser;
 using inprobitas.game.story;
+using System.Net.Http.Headers;
 
 namespace inprobitas
 {
@@ -22,25 +23,41 @@ namespace inprobitas
             UInt32[] courtroomHall = UnpackImage(assetsDir + "rooms/Encoded/courtroomHall.bitmap",true);
 
 
-            Window w = new Window((ushort)(Width), (ushort)(Height),4,0);
+            Text notice = new Text("please turn on sound or this game (it comes in the second half)", new Color(255, 255, 255), 15, "Ace-Attourney");
+            Frame noticeFrame = new Frame(new UIdim(0, 0, 0f, 0f), new UIdim(0, 0, 1f, 1f), new UIdim(0, 0, 0f, 0f), 999);
+            noticeFrame.Append(notice);
 
+            GUI temp = new GUI(Width, Height);
+            temp.Append(noticeFrame);
+
+
+            Window w = new Window((ushort)(Width), (ushort)(Height),4,0);
+            w.ProcessGUI(temp);
             w.Update();
             w.Render();
+
+            Thread.Sleep(3000);
 
             //Image idk = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(0, 0, 0.5f, 0.5f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(Width,Height,0f,0f) ,UnpackImage(assetsDir + "scenes/scene resources/Encoded/deadgirl.bitmap", true), new UIdim(Width, Height, 0f, 0f));
             //background.Append(idk);
 
-            //Cutscene first_turnabout = new Cutscene("test");
-            //first_turnabout.PlayCutscene(w);
+            Cutscene first_turnabout = new Cutscene("test");
+            first_turnabout.PlayCutscene(w);
 
             courtroomMenu CourtIntro = new courtroomMenu();
             CourtIntro.Render(w);
             w.Update();
             w.Render();
 
+            ScriptParser.Parse(w, CourtIntro, assetsDir + "story/10001_lobby.txt");
 
+            notice.Content = "this game is still unfinished, there currently is no gameplay as it is very hard to reverse engineer the DS ROMs for ace attourney, in the future there will be more features, for now you can press enter to see the rest of the unfinished game";
+            w.ProcessGUI(temp);
+            w.Update();
+            w.Render();
+            Console.ReadKey();
             ScriptParser.Parse(w, CourtIntro, assetsDir + "story/10002_trial_start.txt");
-            ScriptParser.Parse(w,CourtIntro,assetsDir + "story/10001_lobby.txt");
+            
 
 
 
