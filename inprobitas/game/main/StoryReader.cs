@@ -247,31 +247,36 @@ namespace inprobitas.game.story
                                 case "NAM_PHOENIX":
                                     {
                                         Speaker = "Phoenix";
-                                        menu.SetSpeaker(Speaker);
                                         break;
                                     }
                                 case "NAM_MIA":
                                     {
                                         Speaker = "Mia";
-                                        menu.SetSpeaker(Speaker);
                                         break;
                                     }
                                 case "NAM_BUTZ":
                                     {
                                         Speaker = "Butz";
-                                        menu.SetSpeaker(Speaker);
                                         break;
                                     }
                                 case "NAM_UNKNOW":
                                     {
                                         Speaker = "???";
-                                        menu.SetSpeaker(Speaker);
+                                        break;
+                                    }
+                                case "NAM_JUDGE":
+                                    {
+                                        Speaker = "Judge";
+                                        break;
+                                    }
+                                case "NAM_PAYNE":
+                                    {
+                                        Speaker = "Payne";
                                         break;
                                     }
                                 case "NAM_NONE":
                                     {
                                         Speaker = "";
-                                        menu.SetSpeaker(Speaker);
                                         break;
                                     }
                                 default:
@@ -280,6 +285,7 @@ namespace inprobitas.game.story
                                         break;
                                     }
                             }
+                            menu.SetSpeaker(Speaker);
                             break;
                         }
                     case ScriptEventType.character:
@@ -296,6 +302,21 @@ namespace inprobitas.game.story
                                         Character = "Larry";
                                         break;
                                     }
+                                case "CHR_JUDGE":
+                                    {
+                                        Character = "Judge";
+                                        break;
+                                    }
+                                case "CHR_PHOENIX":
+                                    {
+                                        Character = "Phoenix";
+                                        break;
+                                    }
+                                case "CHR_PAYNE":
+                                    {
+                                        Character = "Payne";
+                                        break;
+                                    }
                                 case "CHR_NONE":
                                     {
                                         Character = "none";
@@ -307,6 +328,7 @@ namespace inprobitas.game.story
                                         break;
                                     }
                             }
+                            Animation = "none";
                             menu.SetCharacter(Character, Animation);
                             break;
                         }
@@ -355,6 +377,30 @@ namespace inprobitas.game.story
                                         Character = "Mia";
                                         break;
                                     }
+                                case "ANI_MIA_SAD_STAND":
+                                    {
+                                        Animation = "mia-bench-sad(a)";
+                                        Character = "Mia";
+                                        break;
+                                    }
+                                case "ANI_MIA_SAD_TALK":
+                                    {
+                                        Animation = "mia-bench-sad(b)";
+                                        Character = "Mia";
+                                        break;
+                                    }
+                                case "ANI_MIA_SHOCK_STAND":
+                                    {
+                                        Animation = "mia-bench-wut(a)";
+                                        Character = "Mia";
+                                        break;
+                                    }
+                                case "ANI_MIA_SHOCK_TALK":
+                                    {
+                                        Animation = "mia-bench-wut(b)";
+                                        Character = "Mia";
+                                        break;
+                                    }
                                 case "ANI_LARRY_CRY_STAND":
                                     {
                                         Animation = "larry-nervous(a)";
@@ -389,6 +435,90 @@ namespace inprobitas.game.story
                                     {
                                         Animation = "larry-thumps up(b)";
                                         Character = "Larry";
+                                        break;
+                                    }
+                                case "ANI_JUDGE_STAND":
+                                    {
+                                        Animation = "judge-normal(a)";
+                                        Character = "Judge";
+                                        break;
+                                    }
+                                case "ANI_JUDGE_TALK":
+                                    {
+                                        Animation = "judge-normal(b)";
+                                        Character = "Judge";
+                                        break;
+                                    }
+                                case "ANI_JUDGE_EYES_CLOSED_STAND":
+                                    {
+                                        Animation = "_judge-thinking";
+                                        Character = "Judge";
+                                        break;
+                                    }
+                                case "ANI_JUDGE_EYES_CLOSED_TALK":
+                                    {
+                                        Animation = "judge-thinking";
+                                        Character = "Judge";
+                                        break;
+                                    }
+                                case "ANI_JUDGE_ANGRY_STAND":
+                                    {
+                                        Animation = "judge-warning(a)";
+                                        Character = "Judge";
+                                        break;
+                                    }
+                                case "ANI_JUDGE_ANGRY_TALK":
+                                    {
+                                        Animation = "judge-warning(b)";
+                                        Character = "Judge";
+                                        break;
+                                    }
+                                case "ANI_PHOENIX_STAND":
+                                    {
+                                        Animation = "normal(a)";
+                                        Character = "Phoenix";
+                                        break;
+                                    }
+                                case "ANI_PHOENIX_TALK":
+                                    {
+                                        Animation = "normal(b)";
+                                        Character = "Phoenix";
+                                        break;
+                                    }
+                                case "ANI_PHOENIX_THINK_STAND":
+                                    {
+                                        Animation = "Thinking_1";
+                                        Character = "Phoenix";
+                                        break;
+                                    }
+                                case "ANI_PHOENIX_THINK_TALK":
+                                    {
+                                        Animation = "Thinking_2";
+                                        Character = "Phoenix";
+                                        break;
+                                    }
+                                case "ANI_PHOENIX_SWEAT_STAND":
+                                    {
+                                        Animation = "Sweating_1";
+                                        Character = "Phoenix";
+                                        break;
+                                    }
+                                case "ANI_PHOENIX_SWEAT_TALK":
+                                    {
+                                        Animation = "Sweating_2";
+                                        Character = "Phoenix";
+                                        break;
+                                    }
+                                case "ANI_PAYNE_STAND":
+                                    {
+                                        Animation = "_payne-normal";
+                                        Character = "Payne";
+                                        break;
+                                    }
+                                case "ANI_PAYNE_TALK":
+                                    {
+                                        Animation = "payne-normal";
+                                        Character = "Payne";
                                         break;
                                     }
                                 default:
@@ -430,11 +560,51 @@ namespace inprobitas.game.story
                                         menu.SetRoom("deadgirl");
                                         break;
                                     }
+                                case "BKG_COURTROOM_TALK":
+                                    {
+                                        menu.PlayScene("gallery-chatter",w);
+                                        break;
+                                    }
+                                case "BKG_COURTROOM_JUDGE":
+                                    {
+                                        menu.SetRoom("judgestand");
+                                        break;
+                                    }
+                                case "BKG_GAVEL_SLAM_0":
+                                    {
+                                        menu.PlayScene("gavel-slam",w);
+                                        break;
+                                    }
+                                case "BGK_COURTROOM_PROSECUTION":
+                                    {
+                                        menu.SetRoom("prosecutorempty");
+                                        break;
+                                    }
+                                case "BKG_COURTROOM_DEFENSE":
+                                    {
+                                        menu.SetRoom("defenseempty");
+                                        menu.ShowBench();
+                                        break;
+                                    }
+                                case "BKG_COURTROOM_PROSECUTION":
+                                    {
+                                        menu.SetRoom("prosecutorempty");
+                                        break;
+                                    }
+                                case "BKG_COURTROOM_DEFENSE_SIDE":
+                                    {
+                                        menu.SetRoom("helperstand");
+                                        break;
+                                    }
                                 default:
                                     {
                                         Debug.WriteLine($"ERROR: UNKNOWN BACKGROUND: {ev.Arguments[0]}");
                                         break;
                                     }
+                            }
+                            if (!(ev.Arguments[0] == "BKG_COURTROOM_DEFENSE"))
+                            {
+                                menu.HideBench();
                             }
                             break;
                         }
@@ -505,6 +675,21 @@ namespace inprobitas.game.story
                                         try
                                         {
                                             MusicReader = new WaveFileReader(assetsDir + "sounds/music/lobby.wav");
+                                            MusicOut = new WaveOutEvent();
+                                            MusicOut.Init(MusicReader);
+                                            MusicOut.Play();
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Debug.WriteLine("ERROR: FAILED TO PLAY MUSIC SOUND");
+                                        }
+                                        break;
+                                    }
+                                case "MUS_TRIAL":
+                                    {
+                                        try
+                                        {
+                                            MusicReader = new WaveFileReader(assetsDir + "sounds/music/court_in_session.wav");
                                             MusicOut = new WaveOutEvent();
                                             MusicOut.Init(MusicReader);
                                             MusicOut.Play();

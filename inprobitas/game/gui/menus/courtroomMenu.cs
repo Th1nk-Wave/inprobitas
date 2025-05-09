@@ -143,7 +143,18 @@ namespace inprobitas.game.gui.menus
                 CharacterImage.GenerateScaledImage();
                 return;
             }
-            if (action == "none")
+            if (action[0] == '_')
+            {
+                CharacterAnimData = new List<uint[]> { UnpackFrames(CharacterDir + Name + "/Encoded/" + action.Substring(1) + ".bitmap", true)[0]};
+                AnimationFrame = 0;
+                CharacterImage.ImageData = CharacterAnimData[0];
+                CharacterImage.ImageSize = new UIdim(Width, Height, 0f, 0f);
+                CharacterImage.ImageRealSize = new UIdim(Width, Height, 0f, 0f);
+                CharacterImage.ImageDataScaled = new uint[Width * Height];
+                CharacterImage.size = new UIdim(Width, Height, 0f, 0f);
+                CharacterImage.GenerateScaledImage();
+                return;
+            } else if (action == "none")
             {
                 return;
             }
@@ -196,6 +207,11 @@ namespace inprobitas.game.gui.menus
         {
             TextBox.ZIndex = -999;
             SpeakerBox.ZIndex = -999;
+        }
+        public void PlayScene(string name,Window w)
+        {
+            Cutscene scene = new Cutscene(name);
+            scene.PlayCutscene(w);
         }
 
         public void Render(Window w)

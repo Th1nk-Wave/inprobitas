@@ -153,6 +153,6 @@ folder_path = 'ace attorney/characters/Phoenix Wright/behind defense bench'
 convert_all_files(folder_path,output_folder,False)
 """
 
-output_folder = "ace attorney/characters/Larry/Encoded"
-folder_path = 'ace attorney/characters/Larry'
+output_folder = "ace attorney/characters/Payne/Encoded"
+folder_path = 'ace attorney/characters/Payne'
 convert_all_files(folder_path,output_folder,False)

@@ -30,8 +30,8 @@ namespace inprobitas
             //Image idk = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(0, 0, 0.5f, 0.5f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(Width,Height,0f,0f) ,UnpackImage(assetsDir + "scenes/scene resources/Encoded/deadgirl.bitmap", true), new UIdim(Width, Height, 0f, 0f));
             //background.Append(idk);
 
-            Cutscene first_turnabout = new Cutscene("test");
-            first_turnabout.PlayCutscene(w);
+            //Cutscene first_turnabout = new Cutscene("test");
+            //first_turnabout.PlayCutscene(w);
 
             courtroomMenu CourtIntro = new courtroomMenu();
             CourtIntro.Render(w);
@@ -39,7 +39,8 @@ namespace inprobitas
             w.Render();
 
 
-            ScriptParser.Parse(w,CourtIntro,assetsDir + "temp/10001_lobby.txt");
+            ScriptParser.Parse(w, CourtIntro, assetsDir + "story/10002_trial_start.txt");
+            ScriptParser.Parse(w,CourtIntro,assetsDir + "story/10001_lobby.txt");
 
 
 

@@ -1,0 +1,19 @@
+LOAD_VIDEO gallery-chatter chatter
+SHOW chatter
+SET_POS chatter 10 10
+
+SCHEDULE 0 1000
+SET_FRAME chatter 1
+WAIT 100
+SET_FRAME chatter 2
+WAIT 100
+SET_FRAME chatter 3
+WAIT 100
+SET_FRAME chatter 4
+WAIT 100
+END_DEF
+
+SCHEDULE 0 1000
+WAIT 100
+RENDER
+END_DEF
