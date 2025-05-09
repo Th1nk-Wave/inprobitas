@@ -330,7 +330,8 @@ namespace inprobitas.engine.API
         }
         public static void SetWindowSize(IntPtr hConsole, UInt16 Width, UInt16 Height)
         {
-            COORD MaxSize = GetLargestConsoleWindowSize(hConsole);
+            //COORD MaxSize = GetLargestConsoleWindowSize(hConsole);
+            COORD MaxSize = new COORD((short)(Width * 2 + 1), (short)(Height + 1));
             SetConsoleScreenBufferSize(hConsole, MaxSize);
 
             SMALL_RECT size = new SMALL_RECT();
@@ -341,7 +342,7 @@ namespace inprobitas.engine.API
             SetConsoleWindowInfo(hConsole, true, ref size);
 
             IntPtr Wnd = GetConsoleWindow();
-            SetWindowPos(Wnd, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+            //SetWindowPos(Wnd, 0, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
 
 
 

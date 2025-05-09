@@ -699,19 +699,16 @@ namespace inprobitas.game.gui.menus
                         }
                     case SceneEventType.TEXT1:
                         {
-                            Debug.WriteLine($"string: {f.arguments[0]}");
                             Text1.Content = f.arguments[0];
                             break;
                         }
                     case SceneEventType.TEXT2:
                         {
-                            Debug.WriteLine($"string: {f.arguments[0]}");
                             Text2.Content = f.arguments[0];
                             break;
                         }
                     case SceneEventType.TEXT3:
                         {
-                            Debug.WriteLine($"string: {f.arguments[0]}");
                             Text3.Content = f.arguments[0];
                             break;
                         }

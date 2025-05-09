@@ -8,6 +8,8 @@ using inprobitas.game.gui.menus;
 using System.ComponentModel.Design;
 using System.Text;
 using System.Timers;
+using static inprobitas.game.story.ScriptParser;
+using inprobitas.game.story;
 
 namespace inprobitas
 {
@@ -28,10 +30,16 @@ namespace inprobitas
             //Image idk = new Image(new UIdim(0, 0, 0f, 0f), new UIdim(0, 0, 0.5f, 0.5f), new UIdim(0, 0, 0f, 0f), 1, new UIdim(Width,Height,0f,0f) ,UnpackImage(assetsDir + "scenes/scene resources/Encoded/deadgirl.bitmap", true), new UIdim(Width, Height, 0f, 0f));
             //background.Append(idk);
 
-            //Cutscene first_turnabout = new Cutscene("First-Turnabout-Intro");
             Cutscene first_turnabout = new Cutscene("test");
             first_turnabout.PlayCutscene(w);
 
+            courtroomMenu CourtIntro = new courtroomMenu();
+            CourtIntro.Render(w);
+            w.Update();
+            w.Render();
+
+
+            ScriptParser.Parse(w,CourtIntro,assetsDir + "temp/10001_lobby.txt");
 
 
 

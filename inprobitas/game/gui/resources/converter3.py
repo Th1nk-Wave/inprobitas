@@ -127,11 +127,13 @@ def convert_all_files(folder_path, output_folder, resize=True):
     for root, dirs, files in os.walk(folder_path):
         for file in files:
             filepath = os.path.join(root, file)
+            print(f"opening {filepath}")
             downscale_and_extract_rgba(filepath, output_size, output_folder + "/" + os.path.splitext(file)[0] + ".bitmap", resize=resize)
 
 
 
 
+"""
 output_folder = "ace attorney/scenes/scene resources/Encoded"
 folder_path = 'ace attorney/scenes/scene resources'
 convert_all_files(folder_path,output_folder,False)
@@ -149,4 +151,8 @@ downscale_and_extract_rgba(folder_path + "/defense bench.png",(141,204),output_f
 output_folder = "ace attorney/characters/Phoenix Wright/behind defense bench/Encoded"
 folder_path = 'ace attorney/characters/Phoenix Wright/behind defense bench'
 convert_all_files(folder_path,output_folder,False)
+"""
 
+output_folder = "ace attorney/characters/Larry/Encoded"
+folder_path = 'ace attorney/characters/Larry'
+convert_all_files(folder_path,output_folder,False)
